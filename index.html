@@ -300,259 +300,46 @@
       
         
           
-            <!-- TOC -->
-
-<ul>
-<li><a href="#手册">手册</a><ul>
-<li><a href="#java代码基本规范手稿">java代码基本规范手稿</a><ul>
-<li><a href="#命名规范">命名规范</a></li>
-<li><a href="#修饰符顺序">修饰符顺序</a></li>
-<li><a href="#代码性能">代码性能</a><ul>
-<li><a href="#未分组">未分组</a></li>
-<li><a href="#集合">集合</a></li>
-<li><a href="#字符串">字符串</a></li>
-<li><a href="#不必要的代码开销">不必要的代码开销</a></li>
-</ul>
-</li>
-<li><a href="#代码可读性">代码可读性</a></li>
-<li><a href="#代码健壮性">代码健壮性</a><ul>
-<li><a href="#未分组-1">未分组</a></li>
-<li><a href="#空指针">空指针</a></li>
-<li><a href="#数字操作">数字操作</a></li>
-<li><a href="#线程">线程</a></li>
-<li><a href="#内存">内存</a></li>
-</ul>
-</li>
-<li><a href="#更好的实现">更好的实现</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<!-- /TOC -->
-
-<h1 id="手册"><a href="#手册" class="headerlink" title="手册"></a>手册</h1><h2 id="java代码基本规范手稿"><a href="#java代码基本规范手稿" class="headerlink" title="java代码基本规范手稿"></a>java代码基本规范手稿</h2><h3 id="命名规范"><a href="#命名规范" class="headerlink" title="命名规范"></a>命名规范</h3><p>  命名规范包括方法，字段，类等等的命名规则，命名要保证易懂可识别，能够通过名称可以大致了其作用。</p>
-<ul>
-<li><p>共同的</p>
-<ol>
-<li>给名称赋予某种意义，比如util包下请统一类名后缀Util 等等。</li>
-<li>不建议在名称中出现 $ 等可用的特殊符号，除非特殊情况，一般是通过这些字符组成[a-z][a-zA-Z0-9]</li>
-</ol>
-</li>
-<li><p>文件</p>
-<ul>
-<li>包（package）<ol>
-<li>包名全部小写，且最好是全英文，不允许出现数字开头</li>
-<li>一般我们命名规则 com.公司名.项目名.模块名….</li>
-</ol>
-</li>
-<li>类（class）<ol>
-<li>类名称首字符需要进行大写</li>
-</ol>
-</li>
-<li>接口（interface）<ol>
-<li>在class 规则上面建议使用 I 开头进行区别</li>
-</ol>
-</li>
-<li>枚举（Enum）<ol>
-<li>基本与 Class 的命名规范类似。在满足 Classd 命名规则的基础之上，保证开头第一个字母为 ”E” ，便于与普通的 Class区别开。</li>
-</ol>
-</li>
-</ul>
-</li>
-<li><p>代码成员</p>
-<ul>
-<li>变量名称   <ol>
-<li>变量名称建议使用驼峰命名方式，不推荐使用下划线方式</li>
-<li>静态变量需要进行大写</li>
-<li>常量字段 （Constants ） ，大写表示，并且字母之间通过  _ 连接</li>
-</ol>
-</li>
-<li>方法<ol>
-<li>方法名是一个动词，采用大小写混合的方式，第一个单词的首字母小写，其后单词的首字母大写。<br>方法名尽可能的描述出该方法的动作行为。返回类型为 Boolean 值的方法一般由“ is ”或“ has ”来开头。如： getCurrentUser()、addUser() 、hasAuthority()</li>
-</ol>
-</li>
-</ul>
-</li>
-</ul>
-<h3 id="修饰符顺序"><a href="#修饰符顺序" class="headerlink" title="修饰符顺序"></a>修饰符顺序</h3><pre><code>修饰符要按照规定的规范进行书写（规定如下）
-  1. Annotations
-  2. public
-  3. protected
-  4. private
-  5. abstract
-  6. static
-  7. final
-  8. transient
-  9. volatile
-  10. synchronized
-  11. native
-  12. strictfp</code></pre><h3 id="代码性能"><a href="#代码性能" class="headerlink" title="代码性能"></a>代码性能</h3><h4 id="未分组"><a href="#未分组" class="headerlink" title="未分组"></a>未分组</h4><ul>
-<li>不应该使用构造函数来构造“String”，“BigInteger”，“BigDecimal”和原始包装类<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">貌似数字会出现精度误差</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<h4 id="集合"><a href="#集合" class="headerlink" title="集合"></a>集合</h4><ul>
-<li><p>定义集合变量，在定义集合的时候，等号右边的&lt;&gt;内不需要再写上元素类型，直接空着就行（基于jdk1.8功能，自动匹配类型）</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">void test()&#123;</span><br><span class="line">  List&lt;String&gt; a&#x3D;new ArrayList&lt;&gt;();&#x2F;&#x2F;后面的&lt;&gt;不需要指定，按时在定义集合变量类型请一定指定对应存储类型</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>判断集合非空的情况，不要通过使用.size()&gt;0 进行判断，使用collection.isEmpty()</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">void test()&#123;</span><br><span class="line">  List&lt;string&gt; list&#x3D;new ArrayList&lt;&gt;()；</span><br><span class="line">  dosomething();</span><br><span class="line">  if（list.size&gt;0）&#123;&#x2F;&#x2F;建议修改if(!collection.isEmpty())</span><br><span class="line">    &#x2F;*dosomething*&#x2F;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>对于集合局部临时存储变量，在后续操作中没有涉及修改的操作，请不要对其初始化</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">void test()&#123;</span><br><span class="line">  List&lt;string&gt; list&#x3D;new ArrayList&lt;&gt;()；&#x2F;&#x2F;此处不需要进行数据初始化</span><br><span class="line">  list&#x3D;get();</span><br><span class="line">  for(Strng str:list)&#123;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>在对map进行数据遍历的时候需要，如果只是需要遍历key，那么就keyset就行了，如果是同时需要key还有value那么就,那么就entrySet()</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">void test()&#123;</span><br><span class="line">  &#x2F;&#x2F;遍历key 值 ，不使用value</span><br><span class="line">  Map&lt;string,object&gt; map&#x3D;new HashMap();</span><br><span class="line">  for (String key:map.keySet()) &#123;</span><br><span class="line">      dosomething()</span><br><span class="line">  &#125;</span><br><span class="line"> &#x2F;*遍历key 值 ，使用value</span><br><span class="line"> 如果这里的map 没有对&lt;&gt;内的泛型进行制定，那么下面的代码将报错，所以对集合定义的时候一定要制定泛型</span><br><span class="line"> *&#x2F;</span><br><span class="line"> for (Map.Entry&lt;String,Object&gt; entry:map.entrySet()) &#123;</span><br><span class="line">    dosomething()</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<h4 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h4><ul>
-<li><p>不要使用同步的Vector/HashTable/Stack/StringBuffer等。在早期，出于线程安全问题考虑，java API 提供了这些类。但是同步会极大影响性能，即使是在同一个线程中使用他们。<br>对于字符串变量，也就是说，如果我们在代码中会修改字符串，那么使用stringbuilder，如果不修改那么使用stringbuffer</p>
-<table>
-<thead>
-<tr>
-<th align="center">名称</th>
-<th align="center">stringbuffer</th>
-<th align="center">string</th>
-<th align="center">stringbuilder</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">性能</td>
-<td align="center">最快</td>
-<td align="center">较快</td>
-<td align="center">块</td>
-</tr>
-<tr>
-<td align="center">线程安全</td>
-<td align="center">不安全</td>
-<td align="center">不安全</td>
-<td align="center">安全</td>
-</tr>
-</tbody></table>
-</li>
-<li><p>在单个字符处理上请直接使用单字符，不要使用字符串，比如indexof（’a’）时调查替换’str.indexof（“a”）’的效率</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">void test()&#123;</span><br><span class="line">  List&lt;String&gt; a&#x3D;new ArrayList&lt;&gt;();&#x2F;&#x2F;后面的&lt;&gt;不需要指定，按时在定义集合变量类型请一定指定对应存储类型</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>字符串不应该重复，如果多次用到同一字符串，建议将该字符串定义为字符串常量，再引用。</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">test0(&quot;aaa&quot;);</span><br><span class="line">test1(&quot;aaa&quot;);</span><br><span class="line">test2(&quot;aaa&quot;);</span><br><span class="line">&#x2F;&#x2F;应该在类中对 aaa这个字符串单独定义</span><br><span class="line"> private static final StringBuffer等 AAA&#x3D;new stirngbuffer(&quot;aaa&quot;);</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<h4 id="不必要的代码开销"><a href="#不必要的代码开销" class="headerlink" title="不必要的代码开销"></a>不必要的代码开销</h4><ul>
-<li><p>如果判断逻辑只是为了返回true或者false ，就不用写if else 直接 return 判断表达式就行了</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">boolean test()&#123;</span><br><span class="line">  if(expression)&#123;</span><br><span class="line">    return true;</span><br><span class="line">  &#125;else&#123;</span><br><span class="line">    return false;&#x2F;&#x2F;建议直接使用return expression；</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>在同一个条件结构中不能包含同样的分支操作</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">void test()&#123;</span><br><span class="line">  if()&#123;</span><br><span class="line">      system.out.println(&quot;ceshi&quot;)</span><br><span class="line">  &#125;else&#123;</span><br><span class="line">      system.out.println(&quot;ceshi&quot;)&#x2F;&#x2F;同一个结构块中不应该存在相同的块操作，应该去掉else 分支，对判断条件做优化</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>对于没有使用的引用应该删除</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">import java.util.Map;&#x2F;&#x2F;应该删除未使用的引用</span><br><span class="line">void test()&#123;</span><br><span class="line">  int a&#x3D;0;</span><br><span class="line">  system.out.println(&quot;ceshi&quot;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>对没有使用变量应该删除</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">void test()&#123;</span><br><span class="line">  int a&#x3D;0; &#x2F;&#x2F;不需要，应该删除</span><br><span class="line">  system.out.println(&quot;ceshi&quot;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>“抛出”声明不应该是多余的,如果它是以下情况：那么throws声明中的异常是多余的（实际压根不会被抛出） :</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1. 列出多次</span><br><span class="line">2. 列出的异常存在直接的继承关系</span><br><span class="line">3. RuntimeException或其后代之一</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>本地变量如果赋值之后直接return了，那就直接return本地变量的赋值语句。</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">int test()&#123;</span><br><span class="line">  int i&#x3D;get(a);</span><br><span class="line">  return i;&#x2F;&#x2F;直接return get(a);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p><strong>如果在两个不存在包含关系的catch中处理的块是一样的话，那么java7支持对两者进行合并成一个catch块 (jdk 1.7 新特性 )</strong></p>
-<p> <em>请注意，对于两个合并的异常类，不能存在直接的包含关系，也就是某一个类不能是另一个类的子类</em></p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">int test()&#123;</span><br><span class="line">  try()&#123;</span><br><span class="line"></span><br><span class="line">  &#125;catch(IOExption e)&#123;</span><br><span class="line">      dosomething();</span><br><span class="line">  &#125;catch(RuntimeException e)&#123;</span><br><span class="line">      dosomething();&#x2F;&#x2F;和上一个catch块一样的操作的话</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;请做一下合并</span><br><span class="line">int test()&#123;</span><br><span class="line">  try()&#123;</span><br><span class="line"></span><br><span class="line">  &#125;catch(IOExption | RuntimeException e)&#123;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p><strong>使用try-catch-resource 不要手动使用finally 进行资源的关闭（jdk1.7新特性）</strong></p>
-<p><em>请注意，对于放于try（）内初始化的变量，只在try块内可见，并且定义的变量必须是声明继承closeable的类</em></p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">      void test()&#123;</span><br><span class="line">        try&#123;</span><br><span class="line">          InputStream in&#x3D;new FileInputStream()；</span><br><span class="line">          &#x2F;&#x2F;dosomething</span><br><span class="line">        &#125;catch(IOExption e)&#123;</span><br><span class="line">            dosomething();</span><br><span class="line">        &#125;finally&#123;</span><br><span class="line">          try&#123;</span><br><span class="line">            if(in !&#x3D;null)&#123;</span><br><span class="line">              in.close();</span><br><span class="line">            &#125;</span><br><span class="line">            &#x2F;&#x2F;dosomething</span><br><span class="line">          &#125;catch(IOExption e)&#123;</span><br><span class="line">              dosomething();</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      &#x2F;&#x2F;使用try()-&gt;catch-&gt;resource</span><br><span class="line">      void test(  )&#123;</span><br><span class="line">        try( InputStream in&#x3D;new FileInputStream()；)&#123;</span><br><span class="line">          &#x2F;&#x2F;dosomething</span><br><span class="line">        &#125;catch(IOExption e)&#123;</span><br><span class="line">            dosomething();</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#96;&#96;&#96;         </span><br><span class="line"></span><br><span class="line">###  代码可读性</span><br><span class="line"></span><br><span class="line">- 首先需要严格遵循java的基本的规范，除非非常情况下</span><br><span class="line"></span><br><span class="line">- 工具类不应该包含公共的构造器，如果该类被认为不需要实例化，那么请定义一个private的构造方法</span><br><span class="line"></span><br><span class="line">- **只包含一个方法的匿名内部类应该写成Lambdas表达式的形式，增强代码可读(jdk 1.8新特性)**</span><br><span class="line"></span><br><span class="line">- **对于字符集如UTF-8 等编码集合使用 StandardCharsets （jdk1.7新特性）**</span><br></pre></td></tr></table></figure>
-<pre><code>int test(){
-  this.isUTF8 = cs.name().equals(&quot;UTF-8);
-  // 修改使用下面的字符变量
-  this.isUTF8 = cs.name().equals(StandardCharsets.UTF_8);
-}</code></pre>  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">-  不应该在代码中出现大量的注释，应该尽可能少的添加注释，除非非常必要的情况下</span><br><span class="line"></span><br><span class="line">-  Double Brace Initialization（DBI） 不要使用该方式创建一个集合类，不具有良好的可读性</span><br></pre></td></tr></table></figure>
-<pre><code>class Tests{
-  final Set&lt;String&gt; exclusions = new HashSet&lt;&gt;() {{
-            add(‘Alice’);
-            add(‘Bob’);
-            add(‘Marine’);
-        }};
-  //使用以下方式
-  final Set&lt;String&gt; exclusions = new HashSet&lt;String&gt;()；
-  static{
-    exclusions.  add(‘Alice’);
-    exclusions.  add(‘Bob’);
-    exclusions.  add(‘Marine’);
-  }
-}</code></pre>  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- 不要直接抛Error,RuntimeException&#x2F;Throwable&#x2F;Exception这样的通用的异常</span><br></pre></td></tr></table></figure>
-<pre><code>请提供他们的子类，并且给出具体的意义，而不应该直接抛出这些基本的异常类。</code></pre>  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- 方法认知度不应该太高，也就是代码中不应该包含大量的if-else 的结构判断</span><br><span class="line"></span><br><span class="line">###  代码健壮性</span><br><span class="line">#### 未分组</span><br><span class="line"></span><br><span class="line">- Serializable类中的字段本身必须是Serializable或transient。</span><br><span class="line">  即使该类从未显式序列化或反序列化。对于不需要进行序列化的类，那么需要使用transient进行修饰。并且如果是内部类需要被序列化，那么请将内部类定义为静态内部类，因为有时候外部类不需要序列化，但是如果内部类进行序列化而该内部类不是静态内部类的情况下，那么程序会尝试去序列化该外部类，那么程序会出现异常。</span><br><span class="line"></span><br><span class="line">- &quot;InterruptedException&quot; 异常不应该被忽略。</span><br><span class="line">  因为往往抛出该异常的方法是执行无法预计的，可能存在内部阻塞的情况，所以当我们捕获到到该异常的情况下，我们需要进行手动的 Thread.currentThread().interrupt();要求程序立即返回，不在等待响应</span><br><span class="line">。</span><br><span class="line">- clone 方法不应该被重写，如果最后你只是调用了super.colne()。</span><br><span class="line">  Joshua Bloch表示，许多人认为克隆和Cloneable在Java中被破坏，很大程度上是因为重写克隆的规则很棘手，很难做到正确。</span><br><span class="line">  Object的clone方法非常棘手。 它基于现场副本，而且是“超语言”。 它创建一个对象而不调用构造函数。 无法保证它保留构造函数建立的不变量。 多年来，在Sun内外都存在许多错误，这源于这样一个事实，即如果你只是反复调用super.clone直到克隆了一个对象，那么你就拥有了一个浅层的对象副本。 克隆通常与正在克隆的对象共享状态。 如果该状态是可变的，则您没有两个独立的对象。 如果您修改一个，另一个也会更改。 突然之间，你会得到随机行为。</span><br><span class="line">  应该使用复制构造函数或复制工厂。</span><br><span class="line">  无论是否实现Cloneable，此规则都会在重写克隆时引发问题。（*如果要重写 请解决好 深复制 浅复制的问题*）</span><br><span class="line"></span><br><span class="line">- uri不应该是硬编码的。</span><br><span class="line">  对URI进行硬编码会使测试程序变得困难：路径文字并不总是可以跨操作系统移植，特定测试环境中可能不存在给定的绝对路径，执行测试时，指定的Internet URL可能不可用，生产环境 文件系统通常与开发环境不同，等等。 出于所有这些原因，URI永远不应该被硬编码。 相反，它应该由可自定义的参数替换。</span><br></pre></td></tr></table></figure>
-<pre><code>void test(){
-  Url url=new Url (base url +&quot;/&quot;+&quot;&quot;);//不应该使用硬编码“/”
-  //对于访问路径 使用File 工具类 或者http工具类支持的常量
-}</code></pre>  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#### 空指针</span><br><span class="line"></span><br><span class="line">- 方法返回集合或者数组，不应该直接返回null，应该有可能在上一级的调用中出现空指针异常，推荐使用Collections.emptyList()，返回一个空列表。</span><br><span class="line"></span><br><span class="line">- 定义非空变量的时候，在后续调用方法时有可能出现空指针异常。如果没有显示的初始化的情况下，一定做好判断。</span><br><span class="line"></span><br><span class="line">#### 数字操作</span><br><span class="line"></span><br><span class="line">- 如果一个变量被定义为 0 ，那额在接下来的触发操作中，需要进行判断是是否该值为非0数据</span><br><span class="line"></span><br><span class="line">- 不应该使用构造函数来构造“String”，“BigInteger”，“BigDecimal”和原始包装类</span><br></pre></td></tr></table></figure>
-<pre><code>这个构造函数的结果可能有点不可预测。 有人可能会假设在Java中编写新的BigDecimal（0.1）会创建一个BigDecimal，它恰好等于0.1（未缩放值为1，标度为1），但它实际上等于0.1000000000000000055511151231257827021181583404541015625。 这是因为0.1不能精确地表示为double（或者，就此而言，作为任何有限长度的二进制分数）。 因此，传递给构造函数的值并不完全等于0.1，尽管有外观。
-    相反，您应该使用BigDecimal.valueOf，它使用封面下的字符串来消除浮点舍入错误，或者使用String参数的构造函数。
-至于string 以及其他基本类型德华 应该是出于性能考虑吧。</code></pre>  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">- 数字操作在操作或赋值前要转化</span><br><span class="line">  对整数执行算术运算时，结果将始终为整数。 您可以使用自动类型转换将结果分配给long，double或float，但是以int或long开头，结果可能不是您所期望的。</span><br><span class="line">  例如，如果将int division的结果赋给浮点变量，则在赋值之前精度将丢失。 同样，如果乘法结果被赋值为long，则它可能在赋值之前已经溢出。</span><br><span class="line">  在任何一种情况下，结果都不会是预期的结果。 相反，在操作发生之前，应该至少将一个操作数强制转换或提升为最终类型。也就是高精度向低精度强转的时候会出现精度丢失。</span><br><span class="line">  byte-&gt;short-&gt;int-&gt;long-&gt;float-&gt;double（精度最大）</span><br><span class="line"></span><br><span class="line">#### 线程</span><br><span class="line"></span><br><span class="line">- 循环的指示器，不能再循环块中进行改变，除非你能保证在原子性上面能够保证线程安全，否则不要试图在循环体里面修改循环指示器</span><br><span class="line"></span><br><span class="line">- 不要试图使用volatile 保证数据的可见性。</span><br></pre></td></tr></table></figure>
-<pre><code>意思就是非基本类型，引用类型的话声明volatile，保证的是引用永远是最新的，但是它的值却不是最新的，其他线程可能不能及时看到这个引用的最新的值数据，所以不能通过volatile保证引用对象的数据可见性。但是如果在后续的操作中没有修改操作的话，volatile添加这个修饰是有效的</code></pre>  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#### 内存</span><br><span class="line"></span><br><span class="line">### 更好的实现</span><br><span class="line"></span><br><span class="line">- 对于重新equals（）方法的类，请同样实现hashcode方法</span><br></pre></td></tr></table></figure>
-<pre><code>这两个方法永远要一起被重写
-根据Java语言规范，equals（Object）和hashCode（）之间存在契约：
-如果两个对象根据equals（Object）方法相等，则对两个对象中的每一个调用hashCode方法必须生成相同的整数结果。
-如果两个对象根据equals（java.lang.Object）方法不相等，则不需要在两个对象中的每一个上调用hashCode方法必须生成不同的整数结果。
-但是，程序员应该知道为不等对象生成不同的整数结果可能会提高哈希表的性能。
-为了遵守本合同，这些方法既可以是继承的，也可以是重写的。
-并且equals 方法请遵循下面的判断顺序
-
-boolean equals(obj){
-  if(obj ==null){
-    return false;//首先判断非空
-  }
-  if(this.getClass()!=obj.getClass()){
-      return false;//对类型做判断
-  }
-  //最后对值做判断，往往我们会忽视前两步
-}</code></pre>  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- 请使用专用的日志记录器，不要使用System.</span><br></pre></td></tr></table></figure>
-<pre><code>记录消息时，必须满足几个重要要求：
-  用户必须能够轻松检索日志
-  所有记录消息的格式必须统一，以便用户轻松读取日志
-  必须实际记录记录的数据
-  只能安全地记录敏感数据
-  如果程序直接写入标准输出，则绝对无法满足这些要求。 这就是强烈建议定义和使用专用记录器的原因。</code></pre>  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- 使用logger 打印日志的时候，在方法内使用+ 进行字符串拼接操作，应该是用logger提供的占用符操作</span><br></pre></td></tr></table></figure>
-<pre><code>void test(){
-  logger.info(&quot;打印 {} 到 {}&quot;,&quot;a&quot;，&quot;这里&quot;);
-}</code></pre>  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- 对于有返回值的依赖三方的方法，请最好对其进行使用（Return values from functions without side effects should not be ignored）</span><br></pre></td></tr></table></figure>
-<p>  void test（）{</p>
-<pre><code>commad.toLowerCase();//并没有改变原值，请使用返回值</code></pre><p>  }<br>  当对函数的调用没有任何副作用时，如果结果被忽略，那么调用的重点是什么？ 在这种情况下，函数调用是无用的，应该被删除或源代码不按预期运行。</p>
-<pre><code>为了防止生成任何误报，此规则仅在Java API中的以下预定义的不可变类列表中触发问题：
-java.lang.String中
-java.lang.Boolean的
-为java.lang.Integer
-java.lang.Double中
-java.lang.Float中
-java.lang.Byte中
-java.lang.Character中
-java.lang.Short中
-java.lang.StackTraceElement中
-java.time.DayOfWeek
-java.time.Duration
-java.time.Instant
-java.time.LocalDate
-java.time.LocalDateTime
-java.time.LocalTime
-java.time.Month
-java.time.MonthDay
-java.time.OffsetDateTime
-java.time.OffsetTime
-java.time.Period
-java.time.Year
-java.time.YearMonth
-java.time.ZonedDateTime
-java.math.BigInteger中
-java.math.BigDecimal中
-java.util.Optional
-并且还对ConcurrentMap.putIfAbsent调用忽略了返回值。</code></pre><pre><code></code></pre></li>
-</ul>
-
           
+
+
+手册
+java代码基本规范手稿
+命名规范
+修饰符顺序
+代码性能
+未分组
+集合
+字符串
+不必要的代码开销
+
+
+代码可读性
+代码健壮性
+未分组
+空指针
+数字操作
+线程
+内存
+
+
+更好的实现
+
+
+
+
+
+
+
+手册java代码基本规范手稿命名规范  命名规范包括方法，字段，类等等的命名规则，命名要保证易
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/06/17/java%E7%BC%96%E7%A0%81%E8%A7%84%E8%8C%83/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -670,139 +457,19 @@ java.util.Optional
       
         
           
-            <hr>
-<h1 id="jdbc规范"><a href="#jdbc规范" class="headerlink" title="jdbc规范"></a>jdbc规范</h1><p>这个是java定义的一套连接操作数据库的规范 </p>
-<ol>
-<li>JDBC 1.0 随JDK1.1发布；</li>
-<li>JDBC 2.0 随JDK1.2 和 JDK1.3 发布<br>JDBC 2.0 和 JDBC 2.1 API 被分入两个包：<br>java.sql 包（包括核心 API；它是 JDBC 1.22 API 的增强）<br>javax.sql 包（可选的包，用于支持连接池、分布式事务及其他类似的高级功能）。<br>J2SE（Java 2，标准版，在 JDK 1.2 及更高版本中实现）支持 JDBC 2.0 和 JDBC 2.1 核心 API，J2EE 1.3 支持 JDBC 2.0 可选包。</li>
-<li>JDBC3.0 随JDK1.4发布<br>JDBC 3.0 最终于 2002 年 5 月完成，并已合并入 J2SE 1.4 和 J2EE 1.4。<br>从JDBC 3.0 开始有对应的jsr规范（jsr是Java Specification Request 的缩写，意思是Java 规范提案） <a href="https://jcp.org/en/jsr/detail?id=54" target="_blank" rel="noopener">https://jcp.org/en/jsr/detail?id=54</a></li>
-<li>JDBC 4.0 随 JDK1.6 发布<br>从JDBC4.0开始有对应的JDBC API规范，同时也整合之前的一些规范信息 <a href="https://jcp.org/en/jsr/detail?id=221" target="_blank" rel="noopener">https://jcp.org/en/jsr/detail?id=221</a></li>
-<li>JDBC4.1 随 JDK1.7 发布</li>
-<li>JDBC4.2 随 JDK1.8 发布</li>
-<li>关于各个版本jdk对jdbc规范的支持<pre>
-JDK 1.1-JDBC 1.请注意，在8.0版中，对JDBC 1的支持已被删除，因此请在更新服务器时更新JDK。
-JDK 1.2、1.3-JDBC 2。
-JDK 1.3 + J2EE-JDBC 2 EE。它包含对javax.sql类的附加支持。
-JDK 1.4、1.5-JDBC3。它包含对SSL和javax.sql的支持，但由于它已添加到J2SE发行版中，因此不需要J2EE。
-JDK 6-JDBC 4.0对JDBC4方法的支持不完整，但是大多数方法已实现。
-JDK 7-JDBC 4.1对JDBC4方法的支持不完整，但是大多数方法已实现。
-JDK 8-JDBC 4.2对JDBC4方法的支持尚未完成，但是大多数方法已实现。
-</pre>
-给出jdbc3 和jdbc4的一些新的特性<br></li>
-</ol>
-<h2 id="关于jdbc3-的一些新特性"><a href="#关于jdbc3-的一些新特性" class="headerlink" title="关于jdbc3 的一些新特性"></a>关于jdbc3 的一些新特性</h2><ul>
-<li>Savepoint support<br><br>Added the Savepoint interface, which contains new methods to set, release, or<br>roll back a transaction to designated savepoints.(添加了Savepoint接口，该接口包含用于将事务设置，释放或回滚到指定保存点的新方法。就是可以回滚到指定的保存点)<br></li>
-<li>I Reuse of prepared statements by connection pools<br><br>Added the ability for deployers to control how prepared statements are pooled<br>and reused by connections.(为部署者增加了控制连接如何合并和重用准备好的语句的功能。)<br></li>
-<li>I Connection pool configuration<br><br>Defined a number of properties for the ConnectionPoolDataSource interface.<br>These properties can be used to describe how PooledConnection objects<br>created by DataSource objects should be pooled.(为ConnectionPoolDataSource接口定义了许多属性。这些属性可用于描述应如何合并由DataSource对象创建的PooledConnection对象。)<br></li>
-<li>I Retrieval of parameter metadata<br><br>Added the interface ParameterMetaData, which describes the number, type<br>and properties of parameters to prepared statements.(添加了ParameterMetaData接口，该接口描述了准备好的语句的参数数量，类型和属性。)<br></li>
-<li>I Retrieval of auto-generated keys<br><br>Added a means of retrieving values from columns containing automatically<br>generated values.(添加了一种从包含自动生成的值的列中检索值的方法。)<br></li>
-<li>I Ability to have multiple open ResultSet objects<br><br>Added the new method getMoreResults(int), whichtakes an argument that<br>specifies whether ResultSet objects returned by a Statement object should be<br>closed before returning any subsequent ResultSet objects.(添加了新方法getMoreResults（int），该方法带有一个参数，该参数指定在返回任何后续ResultSet对象之前是否应关闭Statement对象返回的ResultSet对象。)<br></li>
-<li>Passing parameters to CallableStatement objects by name<br><br>Added methods to allow a string to identify the parameter to be set for a<br>CallableStatement object.(添加的方法允许字符串标识要为CallableStatement对象设置的参数)<br></li>
-<li>I Holdable cursor support<br><br>Added the ability to specify the of holdability of a ResultSet object.</li>
-<li>I BOOLEAN data type<br><br>Added the data type java.sql.Types.BOOLEAN. BOOLEAN is logically equivalent to BIT.<br></li>
-<li>I Making internal updates to the data in Blob and Clob objects<br><br>Added methods to allow the data contained in Blob and Clob objects to be altered.<br></li>
-<li>I Retrieving and updating the object referenced by a Ref object<br><br>Added methods to retrieve the object referenced by a Ref object. Also added the ability to update a referenced object through the Ref object.<br></li>
-<li>I Updating of columns containing BLOB, CLOB, ARRAY and REF types<br><br>Added of the updateBlob, updateClob, updateArray, and updateRef methods to the ResultSet interface.<br></li>
-<li>I DATALINK/ URL data type<br><br>Added the data type java.sql.Types.DATALINK, allowing JDBC drivers to store and retrieve references to external data.<br></li>
-<li>I Transform groups and type mapping<br><br>Described the effect of transform groups and how this is reflected in the meta-data.<br></li>
-<li>I Relationship between the JDBC SPI (Service Provider Interface) and the<br><br>Connector architecture Described the relationship between the JDBC SPI and the connector architecture in Chapter 19 “Relationship to Connectors”.<br></li>
-<li>I DatabaseMetadata APIs<br><br>Added metadata for retrieving SQL type hierarchies. See the JDBC API Specification for details.<br>
-
-</li>
-</ul>
-<h2 id="关于jdbc4-的一些新特性"><a href="#关于jdbc4-的一些新特性" class="headerlink" title="关于jdbc4 的一些新特性"></a>关于jdbc4 的一些新特性</h2><ul>
-<li>I Added support for REF CURSOR.<br><br>The REF CURSOR data type is supported by several databases to return a result set from a stored procedure.<br></li>
-<li>I Support for large update counts<br><br>JDBC methods that return an update count currently return an int value.<br>This has caused problems as DataSets continue to grow, in certain environments.<br></li>
-<li>I Addition of the java.sql.DriverAction interface<br><br>This interface may be implemented by a driver that wants to be notified by DriverManager when the driver is deregistered.<br></li>
-<li>I Addition of the java.sql.SQLType interface<br><br>An interface used to create an object that represents a generic SQL Type,called a JDBC type or a vendor specific type.<br></li>
-<li>I Addition of the java.sql.JDBCType Enum<br><br>An Enum used to identify generic SQL Types, called JDBCType. The intent is to use JDBCType in place of the constants, defined in Types.java.<br></li>
-</ul>
-<p><em>后面都是对java8中时间的新的类型映射</em></p>
-<ul>
-<li>I Additional Mappings to Table B-4, Mapping from Java Object to JDBC Types<br><br>Added support to map java.time.LocalDate to JDBC DATE.<br>Added support to map java.time.LocalTime to JDBC TIME<br>12 JDBC 4.2 Specification • March 2014<br>Added support to map java.time.LocalDateTime to JDBC TIMESTAMP.<br>Added support to map java.time.LocalOffsetTime to JDBC<br>TIME_WITH_TIMEZONE.<br>Added support to map java.time.LocalOffsetDateTime to JDBC<br>TIMESTAMP_WITH_TIMEZONE.<br>I Additional Mappings to Table B-5, Performed by setObject and setNull between<br>Java Object Types and Target JDBC Types<br>Allow conversion of java.time.LocalDate to CHAR, VARCHAR,<br>LONGVARCHAR, and DATE.<br>Allow conversion of java.time.LocalTime to CHAR, VARCHAR,<br>LONGVARCHAR, and TIME.<br>Allow conversion of java.time.LocalTime to CHAR, VARCHAR,<br>LONGVARCHAR, and TIMESTAMP.<br>Allow conversion of java.time.OffsetTime to CHAR, VARCHAR,<br>LONGVARCHAR, and TIME_WITH_TIMESTAMP.<br>Allow conversion of java.time.OffsetDateTime to CHAR, VARCHAR,<br>LONGVARCHAR, TIME_WITH_TIMESTAMP and<br>TIMESTAMP_WITH_TIMESTAMP.<br>I Additional Mappings to Table B-6, Use ResultSet getter Methods to retrieve JDBC<br>Types<br>Allow getObject to return TIME_WITH_TIMEZONE,<br>TIMESTAMP_WITH_TIMEZONE.<br></li>
-<li>I JDBC API changes<br><br>The following changes were made to existing JDBC interfaces..<br></li>
-<li>I BatchUpdateException<br><br>Added a new constructor to support large update counts.<br>Added the method getLargeUpdateCounts.<br></li>
-<li>I Connection<br><br>Added the methods abort,getNetworkTimeout, getSchema,<br>setNetworkTimeout, setSchema.<br>Clarified the getMapType, setSchema, setMapType methods.<br></li>
-<li>I CallableStatement<br><br>Overloaded the registerOutParameter and setObject methods.<br>Clarified the getObject methods.<br></li>
-<li>I Date<br>Added the methods toInstant, toLocalDate<br><br>Chapter 3 Summary of New Features 13<br>Overload the method valueOf</li>
-<li>I DatabaseMetaData<br><br>Added the methods supportsRefCursor, getMaxLogicalLobSize.<br>Clarified the getIndexInfo method.<br></li>
-<li>I Driver<br><br>Clarified the acceptsURL, and connect, methods<br></li>
-<li>I DriverManager<br><br>Overload the registerDriver method.<br>Clarified the getConnection, deregisterDriver, and<br>registerDriver, methods.<br></li>
-<li>I PreparedStatement<br><br>Added the method executeLargeUpdate.<br>Overload the method setObject.<br></li>
-<li>I ResultSet<br><br>Overloaded the methods updateObject.<br>Clarified the getObject methods.<br></li>
-<li>I Statement<br><br>Added the method executeLargeBatch, executeLargeUpdate.<br>getLargeUpdateCount, getLargeMaxRows, and setLargeMaxRows.<br>Clarified the setEscapeProcessing method.<br></li>
-<li>I SQLInput<br><br>Added the readObject method.<br></li>
-<li>I SQLOutput<br><br>Added the readObject method<br></li>
-<li>I Time<br>Added the methods toInstant, toLocalTime<br>Overload the method valueOf<br></li>
-<li>I Timestamp<br><br>Added the methods from, toInstant, toLocalTime<br>Overload the method valueOf.<br></li>
-<li>I Types<br><br>Added the types REF_CURSOR, TIME_WITH_TIMEZONE, and<br>TIMESTAMP_WITH_TIEMZONE.<br></li>
-<li>I SQLXML<br>14 JDBC 4.2 Specification • March 2014<br>Clarified the getSource and setResult methods.<br></li>
-<li>I DataSource and XADataSource<br>Clarified that a no-arg constructor must be provided<br></li>
-</ul>
-<h2 id="关于常用的数据库的驱动说明地址"><a href="#关于常用的数据库的驱动说明地址" class="headerlink" title="关于常用的数据库的驱动说明地址"></a>关于常用的数据库的驱动说明地址</h2><h3 id="pg"><a href="#pg" class="headerlink" title="pg"></a>pg</h3><p><a href="https://jdbc.postgresql.org/download.html#current" target="_blank" rel="noopener">https://jdbc.postgresql.org/download.html#current</a></p>
-<h3 id="oracle"><a href="#oracle" class="headerlink" title="oracle"></a>oracle</h3><p><a href="https://www.oracle.com/database/technologies/appdev/jdbc-downloads.html" target="_blank" rel="noopener">https://www.oracle.com/database/technologies/appdev/jdbc-downloads.html</a></p>
-<p><strong>总之使用什么jdk 就应该使用对应版本之上的驱动版本 不然可能出现问题</strong></p>
-<h2 id="jdbc驱动使用流程图"><a href="#jdbc驱动使用流程图" class="headerlink" title="jdbc驱动使用流程图"></a>jdbc驱动使用流程图</h2><p><img src="/images/jdbc/%E6%B5%81%E7%A8%8B%E5%9B%BE.png" alt=""></p>
-<h2 id="jdbc-规范api"><a href="#jdbc-规范api" class="headerlink" title="jdbc 规范api"></a>jdbc 规范api</h2><ul>
-<li>主要分为两个包 一个是 java.sql 是一个核心包 还有一个javax.sql<pre>
-下面列出一些javax.sql 一些类，其实就是jdbc2 规范中的 对jdbc的扩展的功能
-javax.sql.CommonDataSource
-javax.sql.ConnectionEvent
-javax.sql.ConnectionEventListener
-javax.sql.ConnectionPoolDataSource
-javax.sql.DataSource
-javax.sql.PooledConnection
-javax.sql.RowSet
-javax.sql.RowSetEvent
-javax.sql.RowSetInternal
-javax.sql.RowSetListener
-javax.sql.RowSetMetaData
-javax.sql.RowSetReader
-javax.sql.RowSetWriter
-javax.sql.StatementEvent
-javax.sql.StatementEventListener
-javax.sql.XAConnection
-javax.sql.XADataSourc
-</pre>
-<img src="/images/jdbc/%E5%8C%85%E4%B9%8B%E9%97%B4%E7%9A%84%E5%90%88%E4%BD%9C1.png" alt=""><br><img src="/images/jdbc/jdbc/%E5%8C%85%E4%B9%8B%E9%97%B4%E7%9A%84%E5%90%88%E4%BD%9C2.png" alt=""><br><img src="/images/jdbc/%E5%8C%85%E4%B9%8B%E9%97%B4%E7%9A%84%E5%90%88%E4%BD%9C3.png" alt=""><br><img src="/images/jdbc/%E5%8C%85%E4%B9%8B%E9%97%B4%E7%9A%84%E5%90%88%E4%BD%9C4.png" alt=""></li>
-</ul>
-<h2 id="关于-DatabaseMetaData-接口"><a href="#关于-DatabaseMetaData-接口" class="headerlink" title="关于 DatabaseMetaData 接口"></a>关于 DatabaseMetaData 接口</h2><pre>
-定义了 140 个方法 和40 属性 
-这个数据库开发生实现驱动的时候可以通过这个类 ，告诉使用者 数据库的一些特性 以及驱动是否能够实现一些规范中要求的功能
-</pre> 
-
-<h2 id="关于-connection"><a href="#关于-connection" class="headerlink" title="关于 connection"></a>关于 connection</h2><h3 id="得到一个connection实例"><a href="#得到一个connection实例" class="headerlink" title="得到一个connection实例"></a>得到一个connection实例</h3><p><img src="/images/jdbc/connection1.png" alt=""></p>
-<h3 id="Connection-Pooling"><a href="#Connection-Pooling" class="headerlink" title="Connection Pooling"></a>Connection Pooling</h3><p>连接池通过维护可在客户端会话之间重用的物理数据库连接的缓存来解决此问题。 连接池极大地提高了性能和可伸缩性，尤其是在三层环境中，其中多个客户端可以共享较少数量的物理数据库连接。<br>在图11-1中，JDBC驱动程序提供了ConnectionPoolDataSource的实现，应用程序服务器使用该实现来构建和管理连接池。<br><img src="/images/jdbc/connection2.png" alt=""></p>
-<p>值得一提的是两个类ConnectionPoolDataSource PooledConnection,这两个类是通过jndi使用的 </p>
-<h2 id="关于事务"><a href="#关于事务" class="headerlink" title="关于事务"></a>关于事务</h2><h3 id="关于事务自动提交"><a href="#关于事务自动提交" class="headerlink" title="关于事务自动提交"></a>关于事务自动提交</h3><p>352/5000<br>Connection属性自动提交指定何时结束事务。 启用自动提交会在每个单独的SQL语句完成后立即进行事务提交。 一条语句被视为“完整”的点取决于SQL语句的类型以及应用程序在执行之后的操作：<br><img src="/images/jdbc/%E4%BA%8B%E5%8A%A11.png" alt=""><br>结束自动提交需要手动提交事务 </p>
-<h3 id="事务等级"><a href="#事务等级" class="headerlink" title="事务等级"></a>事务等级</h3><h4 id="数据查询出现的问题"><a href="#数据查询出现的问题" class="headerlink" title="数据查询出现的问题"></a>数据查询出现的问题</h4><p>脏读 不可重复读 幻读<br><br>事务隔离级别指定事务中的语句“可见”哪些数据。 通过定义针对同一目标数据源的事务之间可能进行的交互（如果有），它们直接影响并发访问的级别。 并发事务之间的可能交互分类如下：</p>
-<ul>
-<li>当允许事务查看未提交的数据更改时，就会发生脏读。 换句话说，在事务内部进行的更改在提交之前在事务外部可见。 如果更改被回滚而不是被提交，则其他事务可能基于不正确的瞬态数据完成工作。</li>
-<li>在以下情况下发生不可重复的读取：<br>  a. Transaction A reads a row<br><br>  b. Transaction B changes the row<br><br>  c. Transaction A reads the same row a second time and gets different results<br></li>
-<li>幻读取发生在<br>  a. Transaction A reads all rows that satisfy a WHERE condition<br><br>  b. Transaction B inserts an additional row that satisfies the same condition<br><br>  c. Transaction A reevaluates the WHERE condition and picks up the additional<br>  “phantom” row<br>      </li>
-</ul>
-<h4 id="jdbc-事务等级"><a href="#jdbc-事务等级" class="headerlink" title="jdbc 事务等级"></a>jdbc 事务等级</h4><p>JDBC通过添加TRANSACTION_NONE增强了SQL：2003定义的四个级别的事务隔离。 从最低限制到最高限制，事务隔离级别为：</p>
-<ul>
-<li>TRANSACTION_NONE — indicates that the driver does not support transactions,<br>which means that it is not a JDBC compliant driver.</li>
-<li>TRANSACTION_READ_UNCOMMITTED — allows transactions to see uncommitted<br>changes to the data. This means that dirty reads, nonrepeatable reads, and<br>phantom reads are possible.</li>
-<li>TRANSACTION_READ_COMMITTED — means that any changes made inside a<br>transaction are not visible outside the transaction until the transaction is<br>committed. This prevents dirty reads, but nonrepeatable reads and phantom<br>reads are still possible.（随着事务隔离级别的提高，需要更多的锁定和其他DBMS开销来确保正确的语义。 反过来，这降低了可以支持的并发访问的程度。 结果，当应用程序使用较高的事务隔离级别时，它们的性能可能会下降。 因此，事务管理器，无论是应用程序本身还是应用程序服务器的一部分，都应在确定哪种事务隔离级别合适时权衡对数据一致性的需求和对性能的要求。  一般我们将事务设置到这里就可以了 设置越高级维护越消耗资源）</li>
-<li>TRANSACTION_REPEATABLE_READ — disallows dirty reads and nonrepeatable<br>reads. Phantom read are still possible.</li>
-<li>TRANSACTION_SERIALIZABLE — specifies that dirty reads, nonrepeatable reads,<br>and phantom reads are prevented.<br> </li>
-</ul>
-<p>*<font color="red"><b>通过connection类的 setTransactionIsolation 方法可以设置事务的等级</font>*</p>
-<h4 id="Savepoints"><a href="#Savepoints" class="headerlink" title="Savepoints"></a>Savepoints</h4><p>通过设置保存点 可以更加细粒度控制事务<br>通过 connection调用<br><img src="/images/jdbc/%E4%BA%8B%E5%8A%A12.png" alt=""></p>
-<pre>Connection.releaseSavepoint 
-删除保存点
-Connection.releaseSavepoint方法将Savepoint对象作为参数，并将其以及当前事务中的所有后续保存点删除。
-释放保存点后，尝试在回滚操作中引用该保存点将导致引发SQLException。
-在提交事务或回滚整个事务时，将自动释放在事务中创建的所有保存点，并使其无效。
-将事务回滚到保存点会自动释放，并使在该保存点之后创建的任何其他保存点无效
-</pre>
-
-<h4 id="分布式事务"><a href="#分布式事务" class="headerlink" title="分布式事务"></a>分布式事务</h4><p><img src="/images/jdbc/%E4%BA%8B%E5%8A%A13.png" alt=""><br>从图中可以看到使用同一个事务管理，比如我们使用jta事务的时候 使用 UserTrancation 来作为多个连接的事务管理器<br>在我写的很多代码都是单一操作数据库连接，并没有存在一个方法快中同时使用了n个服务的情况 ，jta事务在公司用的比较少见，但是真的对应分模块的应用来说分布式事务确实需要非常重视</p>
-<h3 id="statement-执行引擎"><a href="#statement-执行引擎" class="headerlink" title="statement 执行引擎"></a>statement 执行引擎</h3><p>也就调用存储过程特别，其他并没有什么特别的注意点</p>
-<h3 id="resultset-返回结果"><a href="#resultset-返回结果" class="headerlink" title="resultset 返回结果"></a>resultset 返回结果</h3>
           
+jdbc规范这个是java定义的一套连接操作数据库的规范 
+
+JDBC 1.0 随JDK1.1发布；
+JDBC 2.0 随JDK1.2 和 JDK1.3 发布JDBC 2.0 和 JDBC 2.1 API 被分入两个包：java.sql 包（包括核心 API；它是 JDBC 1.22 API 的增
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/06/17/jdbc/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
