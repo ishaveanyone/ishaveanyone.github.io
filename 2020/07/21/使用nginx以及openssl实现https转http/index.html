@@ -79,11 +79,15 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="我的博客">
-<meta property="og:url" content="http://yoursite.com/index.html">
+<meta name="description" content="解决方案: 在对工程升级访问协议的时候，其实可以通过代理或者对tomcat进行配置，我是通过tomcat进行设置，通过jdk 生成证书，步骤如下： 使用keytool命令生成证书tomcat.keystore  keytool -genkey -v -alias tomcat -keyalg RSA -keystore tomcat.keystore -validity 36500  *注意：*最">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用nginx以及openssl实现https转http">
+<meta property="og:url" content="http://yoursite.com/2020/07/21/%E4%BD%BF%E7%94%A8nginx%E4%BB%A5%E5%8F%8Aopenssl%E5%AE%9E%E7%8E%B0https%E8%BD%AChttp/index.html">
 <meta property="og:site_name" content="我的博客">
+<meta property="og:description" content="解决方案: 在对工程升级访问协议的时候，其实可以通过代理或者对tomcat进行配置，我是通过tomcat进行设置，通过jdk 生成证书，步骤如下： 使用keytool命令生成证书tomcat.keystore  keytool -genkey -v -alias tomcat -keyalg RSA -keystore tomcat.keystore -validity 36500  *注意：*最">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-07-21T05:39:57.000Z">
+<meta property="article:modified_time" content="2020-07-21T05:48:31.449Z">
 <meta property="article:author" content="老许">
 <meta name="twitter:card" content="summary">
 
@@ -115,13 +119,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/"/>
+  <link rel="canonical" href="http://yoursite.com/2020/07/21/使用nginx以及openssl实现https转http/"/>
 
 
 
 
 
-  <title>我的博客</title>
+  <title>使用nginx以及openssl实现https转http | 我的博客</title>
   
 
 
@@ -140,8 +144,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-  page-home">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -214,9 +217,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -246,9 +249,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/07/21/%E4%BD%BF%E7%94%A8nginx%E4%BB%A5%E5%8F%8Aopenssl%E5%AE%9E%E7%8E%B0https%E8%BD%AChttp/" itemprop="url">使用nginx以及openssl实现https转http</a></h1>
+          <h1 class="post-title" itemprop="name headline">使用nginx以及openssl实现https转http</h1>
         
 
         <div class="post-meta">
@@ -298,22 +299,31 @@
       
 
       
-        
-          
-          解决方案:
-在对工程升级访问协议的时候，其实可以通过代理或者对tomcat进行配置，我是通过tomcat进行设置，通过jdk 生成证书，步骤如下：
-使用keytool命令生成证书tomcat.keystore
+        <p><strong>解决方案:</strong></p>
+<p>在对工程升级访问协议的时候，其实可以通过代理或者对tomcat进行配置，我是通过tomcat进行设置，通过jdk 生成证书，步骤如下：</p>
+<pre>使用keytool命令生成证书tomcat.keystore
 
-keytool -genkey -v -alias tomcat -keyalg RSA
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/07/21/%E4%BD%BF%E7%94%A8nginx%E4%BB%A5%E5%8F%8Aopenssl%E5%AE%9E%E7%8E%B0https%E8%BD%AChttp/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
+keytool -genkey -v -alias tomcat -keyalg RSA -keystore tomcat.keystore -validity 36500
+
+*注意：*最后一步的输入tomcat密钥口令一定要和第一步输入的密码一致，不然tomcat启动就报错
+</pre>
+
+
+<p><strong>出现的问题:</strong></p>
+<p>在请求网站的过程中发现，存在很多资源无法访问的情况，因为我们在打开首页的时候，又去请求了其他服务器下的资源。百度一番发现原来是，在https页面只通过https 去请求资源，网上有很多的人说可以去掉请求的协议，浏览器会默认通过https请求，失败转而使用http请求，但是这里我做了处理之后仍然不起作用，不知道是不是ajax请求不起作用，（有空测试下在补充）。所以没有办法，只能通过使用nginx代理https。其中ngnix 以及openssl使用如下。</p>
+<ul>
+<li>nginx<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">由于在window中使用nginx，直接下载nginx的压缩包，解压之后，配置</span><br><span class="line">    # HTTPS server</span><br><span class="line">   #</span><br><span class="line">   #server &#123;</span><br><span class="line">   #    listen       443 ssl;</span><br><span class="line">   #    server_name  localhost;</span><br><span class="line"></span><br><span class="line">   #    ssl_certificate      cert.pem;</span><br><span class="line">   #    ssl_certificate_key  cert.key;</span><br><span class="line"></span><br><span class="line">   #    ssl_session_cache    shared:SSL:1m;</span><br><span class="line">   #    ssl_session_timeout  5m;</span><br><span class="line"></span><br><span class="line">   #    ssl_ciphers  HIGH:!aNULL:!MD5;</span><br><span class="line">   #    ssl_prefer_server_ciphers  on;</span><br><span class="line"></span><br><span class="line">   #    location &#x2F; &#123;</span><br><span class="line">   #        root   html;</span><br><span class="line">   #        index  index.html index.htm;</span><br><span class="line">   #    &#125;</span><br><span class="line">   #&#125;</span><br><span class="line"></span><br><span class="line">ex:</span><br><span class="line">   将上面的打开进行配置，在配置中需要提供证书，所以通过openssl进行证书生成</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<ul>
+<li>openssl</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">同样是在window下使用，所以直接下载安装程序，网上有说官网提供了Win32OpenSSL_Light-1_1_0h.exe，下载之后，安装提示要把ddl放在system还是自己的选择的目录中，果断选择自定义的bin目录。之后进行证书生成，步骤如下：</span><br><span class="line">1) 生成RSA私钥</span><br><span class="line">openssl genrsa -des3 -out server.key 1024</span><br><span class="line"></span><br><span class="line">2) 生成签名</span><br><span class="line">openssl req -new -key server.key -out server.csr</span><br><span class="line"></span><br><span class="line">3) 根据已生成的RSA私钥输出无加密的私钥</span><br><span class="line">openssl rsa -in server.key -out server_nopass.key</span><br><span class="line"></span><br><span class="line">4) 使用签名和私钥生成crt证书</span><br><span class="line">openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt</span><br><span class="line"></span><br><span class="line">*注意: *记住在nginx 配置的时候，在window中把生成的证书放在nginx conf目录中，否则会出现找不到证书的错误</span><br></pre></td></tr></table></figure>
+
+<p><strong>仍然出现问题:</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">由于是openssl签发的证书，并不能在代码，比如我使用ajax请求对应的地址可以成功，一般我们请求https 地址，如果是不受信任的证书，浏览器都会提示，私密链接，我们会选择高级继续访问，如果不是有效的证书，在代码中调用依然是不成功的。</span><br><span class="line"></span><br><span class="line">fine，白忙活了，当做学习一波吧~~~~</span><br></pre></td></tr></table></figure>
       
     </div>
     
@@ -330,141 +340,28 @@ keytool -genkey -v -alias tomcat -keyalg RSA
       
 
       
-
-      
-
       
       
-        <div class="post-eof"></div>
+
       
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/21/%E6%90%AD%E5%BB%BAgitlab/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="老许">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="我的博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/07/21/%E6%90%AD%E5%BB%BAgitlab/" itemprop="url">搭建gitlab</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
             
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-07-21T13:14:23+08:00">
-                2020-07-21
-              </time>
+              <a href="/2020/07/21/%E6%90%AD%E5%BB%BAgitlab/" rel="next" title="搭建gitlab">
+                <i class="fa fa-chevron-left"></i> 搭建gitlab
+              </a>
             
+          </div>
 
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
             
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
+          </div>
         </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          
-          
-首先通过在vm 配置好内外网，映射本地的两块网卡。具体的配置请看我的另外一篇博客https://blog.csdn.net/aaaaa2428572/article/details/79685944
-
-接下来配置gitlab（网上的很坑，很多都没法用，就是很多的yum源都挂了，通过下载rpm进行配
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/07/21/%E6%90%AD%E5%BB%BAgitlab/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -474,297 +371,11 @@ keytool -genkey -v -alias tomcat -keyalg RSA
   </article>
 
 
-    
-      
 
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/17/java%E7%BC%96%E7%A0%81%E8%A7%84%E8%8C%83/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="老许">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="我的博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/17/java%E7%BC%96%E7%A0%81%E8%A7%84%E8%8C%83/" itemprop="url">java编码规范</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-06-17T17:34:15+08:00">
-                2020-06-17
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          
-
-
-手册
-java代码基本规范手稿
-命名规范
-修饰符顺序
-代码性能
-未分组
-集合
-字符串
-不必要的代码开销
-
-
-代码可读性
-代码健壮性
-未分组
-空指针
-数字操作
-线程
-内存
-
-
-更好的实现
-
-
-
-
-
-
-
-手册java代码基本规范手稿命名规范  命名规范包括方法，字段，类等等的命名规则，命名要保证易
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/06/17/java%E7%BC%96%E7%A0%81%E8%A7%84%E8%8C%83/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
+    <div class="post-spread">
       
     </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
   </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/17/jdbc/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="老许">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="我的博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/17/jdbc/" itemprop="url">jdbc</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-06-17T17:16:51+08:00">
-                2020-06-17
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          
-jdbc规范这个是java定义的一套连接操作数据库的规范 
-
-JDBC 1.0 随JDK1.1发布；
-JDBC 2.0 随JDK1.2 和 JDK1.3 发布JDBC 2.0 和 JDBC 2.1 API 被分入两个包：java.sql 包（包括核心 API；它是 JDBC 1.22 API 的增
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/06/17/jdbc/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-  </section>
-
-  
 
 
           </div>
@@ -772,6 +383,10 @@ JDBC 2.0 随JDK1.2 和 JDK1.3 发布JDBC 2.0 和 JDBC 2.1 API 被分入两个包
 
 
           
+
+  
+
+
 
         </div>
         
@@ -968,6 +583,10 @@ JDBC 2.0 随JDK1.2 和 JDK1.3 发布JDBC 2.0 和 JDBC 2.1 API 被分入两个包
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
