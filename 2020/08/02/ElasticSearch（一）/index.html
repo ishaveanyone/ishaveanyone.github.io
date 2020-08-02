@@ -79,16 +79,16 @@
 
 
 
-<meta name="description" content="1 关于esES是一个基于RESTful web接口并且构建在Apache Lucene之上的开源分布式搜索引擎。 同时ES还是一个分布式文档数据库，其中每个字段均可被索引，而且每个字段的数据均可被搜索，能够横向扩展至数以百计的服务器存储以及处理PB级的数据。 可以在极短的时间内存储、搜索和分析大量的数据。通常作为具有复杂搜索场景情况下的核心发动机。 ES就是为高可用和可扩展而生的。一方面可以通过">
+<meta name="description" content="关于esES是一个基于RESTful web接口并且构建在Apache Lucene之上的开源分布式搜索引擎。 同时ES还是一个分布式文档数据库，其中每个字段均可被索引，而且每个字段的数据均可被搜索，能够横向扩展至数以百计的服务器存储以及处理PB级的数据。 可以在极短的时间内存储、搜索和分析大量的数据。通常作为具有复杂搜索场景情况下的核心发动机。 ES就是为高可用和可扩展而生的。一方面可以通过升级">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ElasticSearch（一）">
 <meta property="og:url" content="https://laoxshare.com/2020/08/02/ElasticSearch%EF%BC%88%E4%B8%80%EF%BC%89/index.html">
 <meta property="og:site_name" content="我的博客">
-<meta property="og:description" content="1 关于esES是一个基于RESTful web接口并且构建在Apache Lucene之上的开源分布式搜索引擎。 同时ES还是一个分布式文档数据库，其中每个字段均可被索引，而且每个字段的数据均可被搜索，能够横向扩展至数以百计的服务器存储以及处理PB级的数据。 可以在极短的时间内存储、搜索和分析大量的数据。通常作为具有复杂搜索场景情况下的核心发动机。 ES就是为高可用和可扩展而生的。一方面可以通过">
+<meta property="og:description" content="关于esES是一个基于RESTful web接口并且构建在Apache Lucene之上的开源分布式搜索引擎。 同时ES还是一个分布式文档数据库，其中每个字段均可被索引，而且每个字段的数据均可被搜索，能够横向扩展至数以百计的服务器存储以及处理PB级的数据。 可以在极短的时间内存储、搜索和分析大量的数据。通常作为具有复杂搜索场景情况下的核心发动机。 ES就是为高可用和可扩展而生的。一方面可以通过升级">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://laoxshare.com/images/es/6563032-d5eefc5690815d4d.webp">
 <meta property="article:published_time" content="2020-08-02T03:57:33.000Z">
-<meta property="article:modified_time" content="2020-08-02T04:07:15.878Z">
+<meta property="article:modified_time" content="2020-08-02T04:09:23.775Z">
 <meta property="article:author" content="老许">
 <meta property="article:tag" content="ElasticSearch6.5.4">
 <meta name="twitter:card" content="summary">
@@ -302,12 +302,12 @@
       
 
       
-        <h1 id="1-关于es"><a href="#1-关于es" class="headerlink" title="1 关于es"></a>1 关于es</h1><p>ES是一个基于RESTful web接口并且构建在Apache Lucene之上的开源分布式搜索引擎。</p>
+        <h1 id="关于es"><a href="#关于es" class="headerlink" title="关于es"></a>关于es</h1><p>ES是一个基于RESTful web接口并且构建在Apache Lucene之上的开源分布式搜索引擎。</p>
 <p>同时ES还是一个分布式文档数据库，其中每个字段均可被索引，而且每个字段的数据均可被搜索，能够横向扩展至数以百计的服务器存储以及处理PB级的数据。</p>
 <p>可以在极短的时间内存储、搜索和分析大量的数据。通常作为具有复杂搜索场景情况下的核心发动机。</p>
 <p>ES就是为高可用和可扩展而生的。一方面可以通过升级硬件来完成系统扩展，称为垂直或向上扩展（Vertical Scale/Scaling Up）。</p>
 <p>另一方面，增加更多的服务器来完成系统扩展，称为水平扩展或者向外扩展（Horizontal Scale/Scaling Out）。尽管ES能够利用更强劲的硬件，但是垂直扩展毕竟还是有它的极限。真正的可扩展性来自于水平扩展，通过向集群中添加更多的节点来分担负载，增加可靠性。ES天生就是分布式的，它知道如何管理多个节点来完成扩展和实现高可用性。意味应用不需要做任何的改动。</p>
-<h1 id="2-Elasticsearch相关概念"><a href="#2-Elasticsearch相关概念" class="headerlink" title="2 Elasticsearch相关概念"></a>2 Elasticsearch相关概念</h1><ol>
+<h1 id="Elasticsearch相关概念"><a href="#Elasticsearch相关概念" class="headerlink" title="Elasticsearch相关概念"></a>Elasticsearch相关概念</h1><ol>
 <li><p>集群（cluster）：一个集群就是由一个或多个节点组织在一起，它们共同持有你整个的数据，并一起提供索引和搜索功能。</p>
 </li>
 <li><p>节点（node）：一个节点就是集群中的一个服务器，作为集群的一部分，参与集群的索引和搜索功能。</p>
@@ -325,7 +325,7 @@
 <li><p>副本（replicas）：创建索引时可以为索引指定0个或者多个副本。副本是分片级别的，即索引的分片由1个主分片（primary shard）和0个或者多个副本分片（replica shard）组成。primary shard可以接受读取和写入请求，replica shard只能接受读取请求。所以副本只能提高数据的可用性和并发读取能力。当primary shard所在服务器的节点挂掉以后，ES会通过leader选举机制将replica shard为primary shard。</p>
 </li>
 </ol>
-<h2 id="2-1-Elasticsearch与传统数据库对应关系"><a href="#2-1-Elasticsearch与传统数据库对应关系" class="headerlink" title="2.1 Elasticsearch与传统数据库对应关系"></a>2.1 Elasticsearch与传统数据库对应关系</h2><p><img src="/images/es/6563032-d5eefc5690815d4d.webp" alt=""></p>
+<h2 id="Elasticsearch与传统数据库对应关系"><a href="#Elasticsearch与传统数据库对应关系" class="headerlink" title="Elasticsearch与传统数据库对应关系"></a>Elasticsearch与传统数据库对应关系</h2><p><img src="/images/es/6563032-d5eefc5690815d4d.webp" alt=""></p>
 
       
     </div>
@@ -487,7 +487,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-关于es"><span class="nav-number">1.</span> <span class="nav-text">1 关于es</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-Elasticsearch相关概念"><span class="nav-number">2.</span> <span class="nav-text">2 Elasticsearch相关概念</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-Elasticsearch与传统数据库对应关系"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 Elasticsearch与传统数据库对应关系</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#关于es"><span class="nav-number">1.</span> <span class="nav-text">关于es</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Elasticsearch相关概念"><span class="nav-number">2.</span> <span class="nav-text">Elasticsearch相关概念</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Elasticsearch与传统数据库对应关系"><span class="nav-number">2.1.</span> <span class="nav-text">Elasticsearch与传统数据库对应关系</span></a></li></ol></li></ol></div>
             
 
           </div>
