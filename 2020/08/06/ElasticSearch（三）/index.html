@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="ElasticSearch6.5.4," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="es 中一些复杂的查询 方式准备数据123456789101112131415PUT &#x2F;sms_logs_index&#x2F;sms_logs_type&#x2F;10&amp;#123;  &quot;corpName&quot;: &quot;【盒马鲜生】&quot;,  &quot;createDate&quot;: &quot;2020-2-26&quot;,  &quot;fee&amp;q">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ElasticSearch（三）">
+<meta property="og:url" content="https://laoxshare.com/2020/08/06/ElasticSearch%EF%BC%88%E4%B8%89%EF%BC%89/index.html">
+<meta property="og:site_name" content="我的博客">
+<meta property="og:description" content="es 中一些复杂的查询 方式准备数据123456789101112131415PUT &#x2F;sms_logs_index&#x2F;sms_logs_type&#x2F;10&amp;#123;  &quot;corpName&quot;: &quot;【盒马鲜生】&quot;,  &quot;createDate&quot;: &quot;2020-2-26&quot;,  &quot;fee&amp;q">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-08-06T02:34:52.000Z">
+<meta property="article:modified_time" content="2020-08-06T02:43:30.312Z">
+<meta property="article:author" content="老许">
+<meta property="article:tag" content="ElasticSearch6.5.4">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://laoxshare.com/2020/08/06/ElasticSearch（三）/"/>
+
+
+
+
+
+  <title>ElasticSearch（三） | 我的博客</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">我的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://laoxshare.com/2020/08/06/ElasticSearch%EF%BC%88%E4%B8%89%EF%BC%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="老许">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="我的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">ElasticSearch（三）</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-08-06T10:34:52+08:00">
+                2020-08-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="es-中一些复杂的查询-方式"><a href="#es-中一些复杂的查询-方式" class="headerlink" title="es 中一些复杂的查询 方式"></a>es 中一些复杂的查询 方式</h1><h2 id="准备数据"><a href="#准备数据" class="headerlink" title="准备数据"></a>准备数据</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">PUT &#x2F;sms_logs_index&#x2F;sms_logs_type&#x2F;10</span><br><span class="line">&#123;</span><br><span class="line">  &quot;corpName&quot;: &quot;【盒马鲜生】&quot;,</span><br><span class="line">  &quot;createDate&quot;: &quot;2020-2-26&quot;,</span><br><span class="line">  &quot;fee&quot;: 56,</span><br><span class="line">  &quot;ipAddr&quot;: &quot;10.123.944.0&quot;,</span><br><span class="line">  &quot;longCode&quot;: 10690000066009,</span><br><span class="line">  &quot;mobile&quot;: &quot;1738983326623332&quot;,</span><br><span class="line">  &quot;operatorid&quot;: 1,</span><br><span class="line">  &quot;province&quot;: &quot;湖北&quot;,</span><br><span class="line">  &quot;relyTotal&quot;: 12,</span><br><span class="line">  &quot;sendDate&quot;: &quot;2020-6-29&quot;,</span><br><span class="line">  &quot;smsContext&quot;:   &quot;【途虎养车】亲爱的王先生，您的爱车已经购买&quot;,</span><br><span class="line">  &quot;state&quot;: 1</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="term查询-完全匹配查找，不会对数据进行分词然后搜索"><a href="#term查询-完全匹配查找，不会对数据进行分词然后搜索" class="headerlink" title="term查询 完全匹配查找，不会对数据进行分词然后搜索"></a>term查询 完全匹配查找，不会对数据进行分词然后搜索</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">POST &#x2F;sms_logs_index&#x2F;sms_logs_type&#x2F;_search</span><br><span class="line">&#123;</span><br><span class="line">  &quot;from&quot;: 0,</span><br><span class="line">  &quot;size&quot;: 5,</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;term&quot;: &#123;</span><br><span class="line">      &quot;province&quot;: &#123;</span><br><span class="line">        &quot;value&quot;: &quot;湖&quot;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="修改mapping-不能直接修改-只能只用中间字段替换"><a href="#修改mapping-不能直接修改-只能只用中间字段替换" class="headerlink" title="修改mapping 不能直接修改 只能只用中间字段替换"></a>修改mapping 不能直接修改 只能只用中间字段替换</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">POST &#x2F;sms_logs_index&#x2F;sms_logs_type&#x2F;_mapping?pretty</span><br><span class="line">&#123;</span><br><span class="line">  &quot;properties&quot;: &#123;</span><br><span class="line">    &quot;province&quot;: &#123;</span><br><span class="line">      &quot;type&quot;: &quot;text&quot;,</span><br><span class="line">      &quot;analyzer&quot;: &quot;ik_max_word&quot;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">POST &#x2F;sms_logs_index&#x2F;sms_logs_type&#x2F;_search</span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;terms&quot;: &#123;</span><br><span class="line">      &quot;province&quot;: [</span><br><span class="line">        &quot;湖&quot;,</span><br><span class="line">        &quot;yw&quot;</span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="match"><a href="#match" class="headerlink" title="match"></a>match</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">POST &#x2F;sms_logs_index&#x2F;sms_logs_type&#x2F;_search</span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;match_all&quot;: &#123;&#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">POST &#x2F;sms_logs_index&#x2F;sms_logs_type&#x2F;_search</span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;match&quot;: &#123;</span><br><span class="line">      &quot;corpName&quot;: &quot;男人养车&quot;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="采用and-或者or的方式进行查宅"><a href="#采用and-或者or的方式进行查宅" class="headerlink" title="采用and 或者or的方式进行查宅"></a>采用and 或者or的方式进行查宅</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">POST &#x2F;sms_logs_index&#x2F;sms_logs_type&#x2F;_search</span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;match&quot;: &#123;</span><br><span class="line">      &quot;smsContext&quot;: &#123;</span><br><span class="line">        &quot;query&quot;: &quot;养车 购买&quot;,</span><br><span class="line">        &quot;operator&quot;: &quot;and&quot;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">POST &#x2F;sms_logs_index&#x2F;sms_logs_type&#x2F;_search</span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;multi_match&quot;: &#123;</span><br><span class="line">      &quot;query&quot;: &quot;车&quot;,</span><br><span class="line">      &quot;fields&quot;: [&quot;corpName&quot;,&quot;smsContext&quot;]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="基本查询通过id-查询"><a href="#基本查询通过id-查询" class="headerlink" title="基本查询通过id 查询"></a>基本查询通过id 查询</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET &#x2F;sms_logs_index&#x2F;sms_logs_type&#x2F;6</span><br></pre></td></tr></table></figure>
+<h2 id="ids-查询"><a href="#ids-查询" class="headerlink" title="ids 查询"></a>ids 查询</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">POST &#x2F;sms_logs_index&#x2F;sms_logs_type&#x2F;_search</span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;ids&quot;: &#123;</span><br><span class="line">      &quot;values&quot;: [&quot;6&quot;,&quot;1&quot;,&quot;2&quot;]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="前缀查询-prefix"><a href="#前缀查询-prefix" class="headerlink" title="前缀查询 prefix"></a>前缀查询 prefix</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">POST &#x2F;sms_logs_index&#x2F;sms_logs_type&#x2F;_search</span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;prefix&quot;: &#123;</span><br><span class="line">      &quot;corpName&quot;: &#123;</span><br><span class="line">        &quot;value&quot;: &quot;安居&quot;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="fuzzy-模糊查询"><a href="#fuzzy-模糊查询" class="headerlink" title="fuzzy 模糊查询"></a>fuzzy 模糊查询</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">POST &#x2F;sms_logs_index&#x2F;sms_logs_type&#x2F;_search</span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;fuzzy&quot;: &#123;</span><br><span class="line">      &quot;corpName&quot;: &#123;</span><br><span class="line">        &quot;value&quot;: &quot;盒马先生&quot;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="wildcard-sql-中的-like-一样’"><a href="#wildcard-sql-中的-like-一样’" class="headerlink" title="wildcard sql 中的 like 一样’"></a>wildcard sql 中的 like 一样’</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">POST &#x2F;sms_logs_index&#x2F;sms_logs_type&#x2F;_search</span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;wildcard&quot;: &#123;</span><br><span class="line">      &quot;corpName&quot;: &#123;</span><br><span class="line">        &quot;value&quot;: &quot;盒马*&quot;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="range-查询"><a href="#range-查询" class="headerlink" title="range 查询"></a>range 查询</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">POST &#x2F;sms_logs_index&#x2F;sms_logs_type&#x2F;_search</span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;range&quot;: &#123;</span><br><span class="line">      &quot;fee&quot;: &#123;</span><br><span class="line">        &quot;gt&quot;: 1</span><br><span class="line">        , &quot;lt&quot;: 20</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="使用正则表达式-进行查询"><a href="#使用正则表达式-进行查询" class="headerlink" title="使用正则表达式 进行查询"></a>使用正则表达式 进行查询</h2> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">POST &#x2F;sms_logs_index&#x2F;sms_logs_type&#x2F;_search</span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;regexp&quot;: &#123;</span><br><span class="line">      &quot;longCode&quot;: &quot;106[0-9]&#123;9&#125;&quot;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="内存查询-分页-方式-scoll-size-返回第一页-并指定id-在上下文中指定生存时间"><a href="#内存查询-分页-方式-scoll-size-返回第一页-并指定id-在上下文中指定生存时间" class="headerlink" title="内存查询 分页 方式 scoll size 返回第一页 并指定id 在上下文中指定生存时间"></a>内存查询 分页 方式 scoll size 返回第一页 并指定id 在上下文中指定生存时间</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">POST &#x2F;sms_logs_index&#x2F;sms_logs_type&#x2F;_search?scroll&#x3D;1m</span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;match_all&quot;: &#123;&#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;size&quot;: 2</span><br><span class="line">&#125;</span><br><span class="line">#查询下一页 通过id 并且需要重新指定 生存时间</span><br><span class="line"></span><br><span class="line">POST &#x2F;_search&#x2F;scroll</span><br><span class="line">&#123;</span><br><span class="line">  &quot;scroll_id&quot;:&quot;DnF1ZXJ5VGhlbkZldGNoAwAAAAAAAEn5FjVveUF6QkU1UVRxaEdfRVdENnpXMlEAAAAAAABJ-BY1b3lBekJFNVFUcWhHX0VXRDZ6VzJRAAAAAAAASfoWNW95QXpCRTVRVHFoR19FV0Q2elcyUQ&#x3D;&#x3D;&quot;,</span><br><span class="line">&quot;scroll&quot;:&quot;1m&quot;</span><br><span class="line">&#125;</span><br><span class="line">#删除上下文</span><br><span class="line">DELETE &#x2F;_search&#x2F;scroll&#x2F;DnF1ZXJ5VGhlbkZldGNoAwAAAAAAAEn5FjVveUF6QkU1UVRxaEdfRVdENnpXMlEAAAAAAABJ-BY1b3lBekJFNVFUcWhHX0VXRDZ6VzJRAAAAAAAASfoWNW95QXpCRTVRVHFoR19FV0Q2elcyUQ&#x3D;&#x3D;</span><br></pre></td></tr></table></figure>
+<h2 id="通过查询条件-进行删除"><a href="#通过查询条件-进行删除" class="headerlink" title="通过查询条件 进行删除"></a>通过查询条件 进行删除</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">POST &#x2F;sms_logs_index&#x2F;sms_logs_type&#x2F;_delete_by_query</span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;regexp&quot;: &#123;</span><br><span class="line">      &quot;longCode&quot;: &quot;106[0-9]&#123;9&#125;&quot;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="复合查询bool查询"><a href="#复合查询bool查询" class="headerlink" title="复合查询bool查询"></a>复合查询bool查询</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">#运营商不能为联通 </span><br><span class="line">#省份式 yw 或者 湖南</span><br><span class="line"># smscontext 必须包含亲爱的 和爱车</span><br><span class="line">POST &#x2F;sms_logs_index&#x2F;sms_logs_type&#x2F;_search</span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;bool&quot;: &#123;</span><br><span class="line">      &quot;should&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">          &quot;match&quot;: &#123;</span><br><span class="line">            &quot;province&quot;: &quot;yw&quot;</span><br><span class="line">          &#125;</span><br><span class="line">          </span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">          &quot;match&quot;: &#123;</span><br><span class="line">            &quot;province&quot;: &quot;湖南&quot;</span><br><span class="line">          &#125;</span><br><span class="line">          </span><br><span class="line">        &#125;</span><br><span class="line">      ],</span><br><span class="line">      &quot;must_not&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">          &quot;match&quot;: &#123;</span><br><span class="line">            &quot;operatorid&quot;: &quot;2&quot;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      ],</span><br><span class="line">      &quot;must&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">          &quot;match&quot;: &#123;</span><br><span class="line">            &quot;smsContext&quot;: &quot;亲爱的&quot;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">          &quot;match&quot;: &#123;</span><br><span class="line">            &quot;smsContext&quot;: &quot;爱车&quot;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="使用boosting"><a href="#使用boosting" class="headerlink" title="使用boosting"></a>使用boosting</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">#positive 匹配才显示</span><br><span class="line">#negative 如果也匹配 可以指定分数 进行排序</span><br><span class="line">POST &#x2F;sms_logs_index&#x2F;sms_logs_type&#x2F;_search</span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;boosting&quot;: &#123;</span><br><span class="line">      </span><br><span class="line">      &quot;negative&quot;: &#123; </span><br><span class="line">        &quot;match&quot;: &#123;</span><br><span class="line">          &quot;smsContext&quot;: &quot;亲爱的&quot;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;,</span><br><span class="line">      &quot;negative_boost&quot;: 0.5, </span><br><span class="line">      &quot;positive&quot;: &#123;</span><br><span class="line">        &quot;term&quot;: &#123;</span><br><span class="line">          &quot;province&quot;: &quot;yw&quot;</span><br><span class="line">        &#125;  </span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="使用filter-过滤器进查询-需要结合-bool-一起使用"><a href="#使用filter-过滤器进查询-需要结合-bool-一起使用" class="headerlink" title="使用filter 过滤器进查询  需要结合 bool 一起使用"></a>使用filter 过滤器进查询  需要结合 bool 一起使用</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">POST &#x2F;sms_logs_index&#x2F;sms_logs_type&#x2F;_search</span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;bool&quot;: &#123;</span><br><span class="line">      &quot;filter&quot;: &#123;</span><br><span class="line">        &quot;term&quot;: &#123;</span><br><span class="line">          &quot;province&quot;: &quot;yw&quot;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="高亮查询"><a href="#高亮查询" class="headerlink" title="高亮查询"></a>高亮查询</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">POST &#x2F;sms_logs_index&#x2F;sms_logs_type&#x2F;_search</span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;match&quot;: &#123;</span><br><span class="line">      &quot;smsContext&quot;: &quot;购买&quot;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;highlight&quot;: &#123;</span><br><span class="line">    &quot;fields&quot;: &#123;</span><br><span class="line">      &quot;smsContext&quot;: &#123;&#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    &quot;pre_tags&quot;: &quot;&lt;font color&#x3D;&#39;red&#39;&gt;&quot;,</span><br><span class="line">    &quot;post_tags&quot;: &quot;&lt;&#x2F;font&gt;&quot;,</span><br><span class="line">    &quot;fragment_size&quot;: 4</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="聚合查询"><a href="#聚合查询" class="headerlink" title="聚合查询"></a>聚合查询</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># es 提供了大量丰富的据合查询的方式 比sql更加强大</span><br><span class="line">POST &#x2F;sms_logs_index&#x2F;sms_logs_type&#x2F;_search</span><br><span class="line">&#123;</span><br><span class="line">  &quot;aggs&quot;: &#123;</span><br><span class="line">    &quot;agg&quot;: &#123;</span><br><span class="line">      &quot;cardinality&quot;: &#123;</span><br><span class="line">        &quot;field&quot;: &quot;corpName&quot;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="对应java的源码位置"><a href="#对应java的源码位置" class="headerlink" title="对应java的源码位置"></a>对应java的源码位置</h1><p><a href="https://github.com/ishaveanyone/skill-pool.git" target="_blank" rel="noopener">https://github.com/ishaveanyone/skill-pool.git</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/ElasticSearch6-5-4/" rel="tag"># ElasticSearch6.5.4</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/08/02/ElasticSearch%EF%BC%88%E4%BA%8C%EF%BC%89/" rel="next" title="ElasticSearch（二）">
+                <i class="fa fa-chevron-left"></i> ElasticSearch（二）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">老许</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7Carchive">
+              
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#es-中一些复杂的查询-方式"><span class="nav-number">1.</span> <span class="nav-text">es 中一些复杂的查询 方式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#准备数据"><span class="nav-number">1.1.</span> <span class="nav-text">准备数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#term查询-完全匹配查找，不会对数据进行分词然后搜索"><span class="nav-number">1.2.</span> <span class="nav-text">term查询 完全匹配查找，不会对数据进行分词然后搜索</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#修改mapping-不能直接修改-只能只用中间字段替换"><span class="nav-number">1.3.</span> <span class="nav-text">修改mapping 不能直接修改 只能只用中间字段替换</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#match"><span class="nav-number">1.4.</span> <span class="nav-text">match</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#采用and-或者or的方式进行查宅"><span class="nav-number">1.5.</span> <span class="nav-text">采用and 或者or的方式进行查宅</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基本查询通过id-查询"><span class="nav-number">1.6.</span> <span class="nav-text">基本查询通过id 查询</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ids-查询"><span class="nav-number">1.7.</span> <span class="nav-text">ids 查询</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#前缀查询-prefix"><span class="nav-number">1.8.</span> <span class="nav-text">前缀查询 prefix</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#fuzzy-模糊查询"><span class="nav-number">1.9.</span> <span class="nav-text">fuzzy 模糊查询</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#wildcard-sql-中的-like-一样’"><span class="nav-number">1.10.</span> <span class="nav-text">wildcard sql 中的 like 一样’</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#range-查询"><span class="nav-number">1.11.</span> <span class="nav-text">range 查询</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用正则表达式-进行查询"><span class="nav-number">1.12.</span> <span class="nav-text">使用正则表达式 进行查询</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#内存查询-分页-方式-scoll-size-返回第一页-并指定id-在上下文中指定生存时间"><span class="nav-number">1.13.</span> <span class="nav-text">内存查询 分页 方式 scoll size 返回第一页 并指定id 在上下文中指定生存时间</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#通过查询条件-进行删除"><span class="nav-number">1.14.</span> <span class="nav-text">通过查询条件 进行删除</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#复合查询bool查询"><span class="nav-number">1.15.</span> <span class="nav-text">复合查询bool查询</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用boosting"><span class="nav-number">1.16.</span> <span class="nav-text">使用boosting</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用filter-过滤器进查询-需要结合-bool-一起使用"><span class="nav-number">1.17.</span> <span class="nav-text">使用filter 过滤器进查询  需要结合 bool 一起使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#高亮查询"><span class="nav-number">1.18.</span> <span class="nav-text">高亮查询</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#聚合查询"><span class="nav-number">1.19.</span> <span class="nav-text">聚合查询</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#对应java的源码位置"><span class="nav-number">2.</span> <span class="nav-text">对应java的源码位置</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">老许</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
