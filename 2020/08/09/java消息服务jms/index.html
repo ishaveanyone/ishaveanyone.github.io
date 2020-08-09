@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="mq," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="jms 是什么jms是javaee13个开发规范中的一个今天，咱们先随着我的脚步简单认识一下java这个巨人研究的13个核心标准到底是什么？无论如何，咱们要先混个脸熟！ 注意：我尽量找到生活中的实例与大家对应，但是个人能力有限，这也是个过程，先暂时把一些最初的想法发给大家，欢迎大家补充，没有生活实例的，表示我还需要研究，会在以后的博客中，具体阐述！ JDBC（java Database Conne">
+<meta property="og:type" content="article">
+<meta property="og:title" content="java消息服务jms">
+<meta property="og:url" content="https://laoxshare.com/2020/08/09/java%E6%B6%88%E6%81%AF%E6%9C%8D%E5%8A%A1jms/index.html">
+<meta property="og:site_name" content="我的博客">
+<meta property="og:description" content="jms 是什么jms是javaee13个开发规范中的一个今天，咱们先随着我的脚步简单认识一下java这个巨人研究的13个核心标准到底是什么？无论如何，咱们要先混个脸熟！ 注意：我尽量找到生活中的实例与大家对应，但是个人能力有限，这也是个过程，先暂时把一些最初的想法发给大家，欢迎大家补充，没有生活实例的，表示我还需要研究，会在以后的博客中，具体阐述！ JDBC（java Database Conne">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-08-09T05:52:27.000Z">
+<meta property="article:modified_time" content="2020-08-09T06:57:39.567Z">
+<meta property="article:author" content="老许">
+<meta property="article:tag" content="mq">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://laoxshare.com/2020/08/09/java消息服务jms/"/>
+
+
+
+
+
+  <title>java消息服务jms | 我的博客</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">我的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://laoxshare.com/2020/08/09/java%E6%B6%88%E6%81%AF%E6%9C%8D%E5%8A%A1jms/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="老许">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="我的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">java消息服务jms</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-08-09T13:52:27+08:00">
+                2020-08-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="jms-是什么"><a href="#jms-是什么" class="headerlink" title="jms 是什么"></a>jms 是什么</h1><p>jms是javaee13个开发规范中的一个<br>今天，咱们先随着我的脚步简单认识一下java这个巨人研究的13个核心标准到底是什么？无论如何，咱们要先混个脸熟！</p>
+<p>注意：我尽量找到生活中的实例与大家对应，但是个人能力有限，这也是个过程，先暂时把一些最初的想法发给大家，欢迎大家补充，没有生活实例的，表示我还需要研究，会在以后的博客中，具体阐述！</p>
+<h2 id="JDBC（java-Database-Connectivity）"><a href="#JDBC（java-Database-Connectivity）" class="headerlink" title="JDBC（java Database Connectivity）"></a>JDBC（java Database Connectivity）</h2><p>JDBC API为访问不同的数据库提供了一种统一的途径，就像ODBC一样，JDBC对开发者屏蔽了一些细节问题，同时，JDBC对数据库的访问也具有平台无关性。</p>
+<p>生活实例：我们的粮仓，一般会配一个仓库管理员，对于仓库的事，找他就行，他拿着钥匙，和保存各个仓库的具体数据信息！</p>
+<h2 id="JNDI-Java-Name-and-Directory-Interface"><a href="#JNDI-Java-Name-and-Directory-Interface" class="headerlink" title="JNDI(Java Name and Directory Interface)"></a>JNDI(Java Name and Directory Interface)</h2><p>JNDI API 被用于执行名字和目录服务。它提供了一致的模型用来存取和操作企业级的资源如DNS和LDAP，本地文件系统，或应用服务器中的对象。</p>
+<p>生活实例：花名册，或者族谱，我们每个人出生在族谱中登记一个名字，这样我们根据名字就可以知道这个人的来龙去脉！</p>
+<h2 id="EJB（Enterprise-JavaBean）"><a href="#EJB（Enterprise-JavaBean）" class="headerlink" title="EJB（Enterprise JavaBean）"></a>EJB（Enterprise JavaBean）</h2><p>J2ee技术之所以赢得全体广泛重视的原因之一就是EJB，他们提供了一个框架开发和实施分布式商务逻辑，由此很显著简化了具有可伸缩性和高度复杂的企业级应用开发。EJB规范定义了EJB组件何时如何与他们的容器继续拧交互作用。容器负责提供公用的服务，例如目录服务、事务管理、安全性、资源缓冲池以及容错性。但是注意的是，EJB并不是J2EE的唯一途径。正是由于EJB的开放性，使得有的厂商能够以一种和EJB平行的方式来达到同样的目的。</p>
+<p>生活实例：EJB到底是什么，这个……我暂时的理解，就是个特殊的类，特殊在他可以实现分布式的服务，就是多个人可以同时分布干一件事，总之还有点晕！</p>
+<h2 id="RMI（RemoteMethod-Invoke）"><a href="#RMI（RemoteMethod-Invoke）" class="headerlink" title="RMI（RemoteMethod Invoke）"></a>RMI（RemoteMethod Invoke）</h2><p>remote（遥远的） invoke（调用）.<br>正如其名字所表示的那样，RMI协议调用远程对象上方法。它使用了序列化方式在客户端和服务器端传递数据。RMI是一种被EJB使用的更底层的协议。</p>
+<h2 id="Java-IDL（接口定义语言）-CORBA"><a href="#Java-IDL（接口定义语言）-CORBA" class="headerlink" title="Java IDL（接口定义语言）/CORBA"></a>Java IDL（接口定义语言）/CORBA</h2><p>公共对象请求代理结构（Common Object Request Breaker Architecture）：<br>在java IDL的支持下，开发人员可以将Java和CORBA集成在一起。他们可以创建Java对象并使之可以在CORBA ORB中展开，或者他们还可以创建Java类并做为和其他ORB一起展开的CORBA对象客户。后一种方法提供了另外一种途径，通过它可以被用于你的新的应用和旧系统相集成。</p>
+<h2 id="JSP-Java-Server-Pages"><a href="#JSP-Java-Server-Pages" class="headerlink" title="JSP(Java Server Pages)"></a>JSP(Java Server Pages)</h2><p>Jsp页面由html代码和嵌入其中的Java新代码所组成。服务器在页面被客户端所请求以后对这些java代码进行处理，然后将生成的html页面返回给客户端的浏览器。</p>
+<h2 id="Java-Servlet"><a href="#Java-Servlet" class="headerlink" title="Java Servlet"></a>Java Servlet</h2><p>servlet是一种小型的java程序，它扩展了web服务器的功能。作为一种服务器端的应用，当被请求时开始执行，这和CGI Perl脚本很相似。Servlet提供的功能大多和jsp类似，不过实现方式不同。JSP通过大多数的html代码中嵌入少量的java代码，而servlet全部由java写成并生成相应的html。</p>
+<h2 id="XML（Extensible-Markup-Language）"><a href="#XML（Extensible-Markup-Language）" class="headerlink" title="XML（Extensible Markup Language）"></a>XML（Extensible Markup Language）</h2><p>XML是一种可以用来定义其他标记语言的语言。它被用来在不同的商务过程中共享数据。XML的发展和Java是互相独立的，但是，它和java具有相同目标正是平台独立。通过java和xml的组合，我们可以得到一个完美的具有平台独立性的解决方案。</p>
+<p>生活实例：暗号，我们规定好怎么说这个暗号，只要你是这个寨子的人，咱们就是一套暗号，他主要用于传输信息！</p>
+<p><span style='color:red;font-size:40px'> JMS（Java Message Service）</span></p>
+<p>JMs是用于和面向消息的中间件相互通信的应用程序接口（API）。它既支持点对点的域，有支持发布/订阅类型的域，并且提供对下列类型的支持：经认可的消息传递，事务性消息传递，一致性消息和具有持久性的订阅者的支持。JMS还提供了另一种方式对您的应用与旧的后台系统相集成。</p>
+<h2 id="JTA（Java-Transaction-Architecture）"><a href="#JTA（Java-Transaction-Architecture）" class="headerlink" title="JTA（Java Transaction Architecture）"></a>JTA（Java Transaction Architecture）</h2><p>Java事务API。允许应用程序执行分布式事务处理——在两个或多个网络计算机资源上访问并且更新数据。JDBC驱动程序的JTA支持极大地增强了数据访问能力。事务最简单最直接的目的就是保证数据的有效性，数据的一致性。</p>
+<p>个人理解： JTA事务比JDBC事务更强大。一个JTA事务可以有多个参与者，而一个JDBC事务则被限定在一个单一的数据库连接。</p>
+<h2 id="JTS-Java-Transaction-Service"><a href="#JTS-Java-Transaction-Service" class="headerlink" title="JTS(Java Transaction Service)"></a>JTS(Java Transaction Service)</h2><p>JTS是CORBA OTS事务监控的基本的实现。JTS规定了事务管理器的实现方式。该事务管理器是在高层支持Java Transaction API (JTA)规范，并且在较底层实现OMG OTSspecification的Java映像。JTS事务管理器为应用服务器、资源管理器、独立的应用以及通信资源管理器提供了事务服务。</p>
+<h2 id="JavaMail"><a href="#JavaMail" class="headerlink" title="JavaMail"></a>JavaMail</h2><p>JavaMail是用于存取邮件服务的API，它提供了一套邮件服务器的抽象类。不仅支持SMTP服务器，也支持IMAP服务器。</p>
+<p>生活实例：可以理解为邮局，咱们填写地址，邮局负责剩下的所有事，对邮寄做了层包装！</p>
+<h2 id="JAF（JavaBeans-Activation-Framework）"><a href="#JAF（JavaBeans-Activation-Framework）" class="headerlink" title="JAF（JavaBeans Activation Framework）"></a>JAF（JavaBeans Activation Framework）</h2><p>JAF是一个专用的数据处理框架,它用于封装数据,并为应用程序提供访问和操作数据的接口.也就是说,JAF让Java程序知道怎么对一个数据源进行查看,编辑,打印等.</p>
+<p>JavaMail利用JAF来处理MIME编码的邮件附件。MIME的字节流可以被转换成Java对象，或者转换自Java对象。大多数应用都可以不需要直接使用JAF。</p>
+<h1 id="jms-消息头"><a href="#jms-消息头" class="headerlink" title="jms 消息头"></a>jms 消息头</h1><p>一个消息对象分为三部分：消息头(Headers)，属性（Properties）和消息体（Payload）。对于StreamMessage和MapMessage，消息本身就有特定的结构，而对于TextMessage，ObjectMessage和BytesMessage是无结构的。一个消息可以包含一些重要的数据或者仅仅是一个事件的通知。<br>消息的Headers部分通常包含一些消息的描述信息，它们都是标准的描述信息。包含下面一些值：</p>
+<p>　　1）JMSDestination</p>
+<pre><code>消息的目的地，Topic或者是Queue。</code></pre><p>　　2）JMSDeliveryMode</p>
+<pre><code>    消息的发送模式：persistent或nonpersistent。前者表示消息在被消费之前，如果JMS提供者DOWN了，重新启动后消息仍然存在。后者在这种情况下表示消息会被丢失。可以通过下面的方式设置：Producer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
+
+3）JMSTimestamp
+
+   当调用send()方法的时候，JMSTimestamp会被自动设置为当前事件。可以通过下面方式得到这个值：
+   long timestamp = message.getJMSTimestamp();</code></pre><p>　　4）JMSExpiration</p>
+<pre><code>表示一个消息的有效期。只有在这个有效期内，消息消费者才可以消费这个消息。默认值为0，表示消息永不过期。可以通过下面的方式设置：
+producer.setTimeToLive(3600000); //有效期1小时 （1000毫秒 * 60秒 * 60分）</code></pre><p>　　5）JMSPriority</p>
+<pre><code>消息的优先级。0-4为正常的优先级，5-9为高优先级。可以通过下面方式设置：
+producer.setPriority(9);</code></pre><p>　　6）JMSMessageID</p>
+<pre><code>一个字符串用来唯一标示一个消息。</code></pre><p>　　7）JMSReplyTo</p>
+<pre><code>有时消息生产者希望消费者回复一个消息，JMSReplyTo为一个Destination，表示需要回复的目的地。当然消费者可以不理会它。</code></pre><p>　　8）JMSCorrelationID<br>       通常用来关联多个Message。例如需要回复一个消息，可以把JMSCorrelationID设置为所收到的消息的JMSMessageID。<br>　　9）JMSType</p>
+<pre><code>表示消息体的结构，和JMS提供者有关。</code></pre><p>　　10）JMSRedelivered</p>
+<pre><code>   如果这个值为true，表示消息是被重新发送了。因为有时消费者没有确认他已经收到消息或者JMS提供者不确定消费者是否已经收到。
+除了Header，消息发送者可以添加一些属性(Properties)。这些属性可以是应用自定义的属性，JMS定义的属性和JMS提供者定义的属性。我们通常只适用自定义的属性。</code></pre><h1 id="jms-消息体"><a href="#jms-消息体" class="headerlink" title="jms 消息体"></a>jms 消息体</h1><pre><code>1、TextMessage – 消息体包含了一个java.lang.String. 包含这种这种消息类型是考虑到String 消息将被广泛使用的前提.另外一个原因就是XML将可能变成一种用来表示JMS消息内容 的主流机制.
+
+2、ObjectMessage –消息包含了一个可序列化的Java对象.如果需要Java对象集合 (collection) , 可以是JDK 1.2提供的集合类型中的任何一种.
+
+3、BytesMessage – 消息包含了一个不间断的字节流.这个消息类型是用来以文字方式编码 一个消息体以匹配存在的消息格式.在很多种情况下,它可能被用于以下用途:自定义的
+消息类型,尽管JMS允许使用带有字节的消息属性,但它们通常不能被使用,因为包含的 属性可以影响格式.
+
+4、StreamMessage – 消息体包含了一个Java primitive 流,这个流被顺序地填充和读取.
+
+5、MapMessage – 消息体包含了一系列的名字-值对.名字是Strings,而值则是Java primitive 类型.消息体中的条目可以被enumerator按照顺序访问,也可以自由访问.条目的顺序没 有定义.</code></pre><h1 id="jms-消息属性"><a href="#jms-消息属性" class="headerlink" title="jms 消息属性"></a>jms 消息属性</h1><p>就是消息的增强api，amp设置消息属性api如下</p>
+<pre><code>void setBooleanProperty(String name, boolean value) throws JMSException;
+
+void setByteProperty(String name, byte value) throws JMSException;
+
+void setShortProperty(String name, short value) throws JMSException;
+
+void setIntProperty(String name, int value) throws JMSException;
+
+void setLongProperty(String name, long value) throws JMSException;
+
+void setFloatProperty(String name, float value) throws JMSException;
+
+void setDoubleProperty(String name, double value) throws JMSException;
+
+void setStringProperty(String name, String value) throws JMSException;
+
+void setObjectProperty(String name, Object value) throws JMSException;</code></pre>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/mq/" rel="tag"># mq</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/08/06/ElasticSearch%EF%BC%88%E4%B8%89%EF%BC%89/" rel="next" title="ElasticSearch（三）">
+                <i class="fa fa-chevron-left"></i> ElasticSearch（三）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">老许</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7Carchive">
+              
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#jms-是什么"><span class="nav-number">1.</span> <span class="nav-text">jms 是什么</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#JDBC（java-Database-Connectivity）"><span class="nav-number">1.1.</span> <span class="nav-text">JDBC（java Database Connectivity）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JNDI-Java-Name-and-Directory-Interface"><span class="nav-number">1.2.</span> <span class="nav-text">JNDI(Java Name and Directory Interface)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#EJB（Enterprise-JavaBean）"><span class="nav-number">1.3.</span> <span class="nav-text">EJB（Enterprise JavaBean）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RMI（RemoteMethod-Invoke）"><span class="nav-number">1.4.</span> <span class="nav-text">RMI（RemoteMethod Invoke）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java-IDL（接口定义语言）-CORBA"><span class="nav-number">1.5.</span> <span class="nav-text">Java IDL（接口定义语言）&#x2F;CORBA</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JSP-Java-Server-Pages"><span class="nav-number">1.6.</span> <span class="nav-text">JSP(Java Server Pages)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java-Servlet"><span class="nav-number">1.7.</span> <span class="nav-text">Java Servlet</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#XML（Extensible-Markup-Language）"><span class="nav-number">1.8.</span> <span class="nav-text">XML（Extensible Markup Language）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JTA（Java-Transaction-Architecture）"><span class="nav-number">1.9.</span> <span class="nav-text">JTA（Java Transaction Architecture）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JTS-Java-Transaction-Service"><span class="nav-number">1.10.</span> <span class="nav-text">JTS(Java Transaction Service)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JavaMail"><span class="nav-number">1.11.</span> <span class="nav-text">JavaMail</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JAF（JavaBeans-Activation-Framework）"><span class="nav-number">1.12.</span> <span class="nav-text">JAF（JavaBeans Activation Framework）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#jms-消息头"><span class="nav-number">2.</span> <span class="nav-text">jms 消息头</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#jms-消息体"><span class="nav-number">3.</span> <span class="nav-text">jms 消息体</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#jms-消息属性"><span class="nav-number">4.</span> <span class="nav-text">jms 消息属性</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">老许</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
