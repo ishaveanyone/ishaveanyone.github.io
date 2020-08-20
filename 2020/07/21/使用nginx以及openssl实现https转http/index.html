@@ -79,15 +79,15 @@
 
 
 
-<meta name="description" content="解决方案: 在对工程升级访问协议的时候，其实可以通过代理或者对tomcat进行配置，我是通过tomcat进行设置，通过jdk 生成证书，步骤如下： 使用keytool命令生成证书tomcat.keystore  keytool -genkey -v -alias tomcat -keyalg RSA -keystore tomcat.keystore -validity 36500  *注意：*最">
+<meta name="description" content="解决方案: 在对工程升级访问协议的时候，其实可以通过代理或者对tomcat进行配置，我是通过tomcat进行设置，通过jdk 生成证书，步骤如下： 12345使用keytool命令生成证书tomcat.keystorekeytool -genkey -v -alias tomcat -keyalg RSA -keystore tomcat.keystore -validity 36500注意：最后">
 <meta property="og:type" content="article">
 <meta property="og:title" content="使用nginx以及openssl实现https转http">
 <meta property="og:url" content="https://laoxshare.com/2020/07/21/%E4%BD%BF%E7%94%A8nginx%E4%BB%A5%E5%8F%8Aopenssl%E5%AE%9E%E7%8E%B0https%E8%BD%AChttp/index.html">
 <meta property="og:site_name" content="我的博客">
-<meta property="og:description" content="解决方案: 在对工程升级访问协议的时候，其实可以通过代理或者对tomcat进行配置，我是通过tomcat进行设置，通过jdk 生成证书，步骤如下： 使用keytool命令生成证书tomcat.keystore  keytool -genkey -v -alias tomcat -keyalg RSA -keystore tomcat.keystore -validity 36500  *注意：*最">
+<meta property="og:description" content="解决方案: 在对工程升级访问协议的时候，其实可以通过代理或者对tomcat进行配置，我是通过tomcat进行设置，通过jdk 生成证书，步骤如下： 12345使用keytool命令生成证书tomcat.keystorekeytool -genkey -v -alias tomcat -keyalg RSA -keystore tomcat.keystore -validity 36500注意：最后">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-07-21T05:39:57.000Z">
-<meta property="article:modified_time" content="2020-07-21T05:48:31.449Z">
+<meta property="article:modified_time" content="2020-08-20T06:42:36.203Z">
 <meta property="article:author" content="老许">
 <meta name="twitter:card" content="summary">
 
@@ -301,12 +301,7 @@
       
         <p><strong>解决方案:</strong></p>
 <p>在对工程升级访问协议的时候，其实可以通过代理或者对tomcat进行配置，我是通过tomcat进行设置，通过jdk 生成证书，步骤如下：</p>
-<pre>使用keytool命令生成证书tomcat.keystore
-
-keytool -genkey -v -alias tomcat -keyalg RSA -keystore tomcat.keystore -validity 36500
-
-*注意：*最后一步的输入tomcat密钥口令一定要和第一步输入的密码一致，不然tomcat启动就报错
-</pre>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">使用keytool命令生成证书tomcat.keystore</span><br><span class="line"></span><br><span class="line">keytool -genkey -v -alias tomcat -keyalg RSA -keystore tomcat.keystore -validity 36500</span><br><span class="line"></span><br><span class="line">注意：最后一步的输入tomcat密钥口令一定要和第一步输入的密码一致，不然tomcat启动就报错</span><br></pre></td></tr></table></figure>
 
 
 <p><strong>出现的问题:</strong></p>
@@ -427,7 +422,7 @@ keytool -genkey -v -alias tomcat -keyalg RSA -keystore tomcat.keystore -validity
               
                 <a href="/archives/%7C%7Carchive">
               
-                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-count">21</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -440,7 +435,7 @@ keytool -genkey -v -alias tomcat -keyalg RSA -keystore tomcat.keystore -validity
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-count">13</span>
                   <span class="site-state-item-name">tags</span>
                 
               </div>
