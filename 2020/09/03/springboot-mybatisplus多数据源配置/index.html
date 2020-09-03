@@ -87,7 +87,7 @@
 <meta property="og:description" content="主从架构我们一般在应对高负载的情况，会将数据库设计为主从架构，主（master）负责完成负载比较小的数据修改，从（salve）负责完成负责比较大的数据查询。 springboot mybatis-plus配置主从mybatis-plus优势是可以实现像jpa一样完全的零xml开发dao层，并且这个框架只做增强，不影响mybatis原有的任何特性以及功能。  springboot yml文件配置12">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-09-03T04:58:16.000Z">
-<meta property="article:modified_time" content="2020-09-03T05:24:56.085Z">
+<meta property="article:modified_time" content="2020-09-03T10:09:02.936Z">
 <meta property="article:author" content="老许">
 <meta property="article:tag" content="springboot">
 <meta name="twitter:card" content="summary">
@@ -398,6 +398,9 @@ public Object save(String name){
 public Object all(){
     return userService.getAll();
 }</code></pre><p>}</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- 启动类</span><br></pre></td></tr></table></figure>
+<p>package com.xupp.springbootmybatis;<br>import org.mybatis.spring.annotation.MapperScan;<br>import org.springframework.boot.SpringApplication;<br>import org.springframework.boot.autoconfigure.SpringBootApplication;<br>import org.springframework.scheduling.annotation.EnableScheduling;<br>@SpringBootApplication<br>//扫描mapper位置<br>@MapperScan(basePackages = “com.xupp.springbootmybatis.mapper”)<br>public class SpringbootMybatisApplication {<br>    public static void main(String[] args) {<br>        SpringApplication.run(SpringbootMybatisApplication.class, args);<br>    }</p>
+<p>}</p>
 <p>```</p>
 <h1 id="实现的原理"><a href="#实现的原理" class="headerlink" title="实现的原理"></a>实现的原理</h1><p>这个方案主要是通过springboot2.0提供的AbstractRoutingDataSource进行实现的。<br>主要是通过determineCurrentLookupKey方法<br>根据用户定义的规则选择当前的数据源，这样我们可以在执行查询之前，设置使用的数据源。实现可动态路由的数据源，在每次数据库查询操作前执行。它的抽象方法 determineCurrentLookupKey() 决定使用哪个数据源。</p>
 <p>确定当前的查找关键字。通常将其实现为检查线程绑定事务上下文。允许任意键。返回的键需要与由resolveSpecifiedLookupKey方法解析的存储的查找键类型匹配。</p>
