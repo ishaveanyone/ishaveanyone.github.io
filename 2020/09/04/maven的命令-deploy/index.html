@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="java,线程," />
+  <meta name="keywords" content="maven," />
 
 
 
@@ -79,19 +79,21 @@
 
 
 
-<meta name="description" content="1 实现runable 接口12345678910public class RunnableTest implements Runnable &amp;#123;    @Override    public void run() &amp;#123;        System.out.println(1);    &amp;#125;    public static void main(String[] args)">
+<meta name="description" content="maven deploy命令的含义maven deploy命令是将你负责的模块发布到你配置的仓库位置。 多模块开发中使用deploy命令配置仓库位置，一般公司都会搭建自己的公司私服，用于加速获取jar以及管理公司的一些技术沉淀工具包之类的123456789101112&lt;distributionManagement&gt;    &lt;repository&gt;        &lt;!-">
 <meta property="og:type" content="article">
-<meta property="og:title" content="java创建线程的方式">
-<meta property="og:url" content="https://laoxshare.com/2020/07/23/java%E5%88%9B%E5%BB%BA%E7%BA%BF%E7%A8%8B%E7%9A%84%E6%96%B9%E5%BC%8F/index.html">
+<meta property="og:title" content="maven的命令-deploy">
+<meta property="og:url" content="https://laoxshare.com/2020/09/04/maven%E7%9A%84%E5%91%BD%E4%BB%A4-deploy/index.html">
 <meta property="og:site_name" content="我的博客">
-<meta property="og:description" content="1 实现runable 接口12345678910public class RunnableTest implements Runnable &amp;#123;    @Override    public void run() &amp;#123;        System.out.println(1);    &amp;#125;    public static void main(String[] args)">
+<meta property="og:description" content="maven deploy命令的含义maven deploy命令是将你负责的模块发布到你配置的仓库位置。 多模块开发中使用deploy命令配置仓库位置，一般公司都会搭建自己的公司私服，用于加速获取jar以及管理公司的一些技术沉淀工具包之类的123456789101112&lt;distributionManagement&gt;    &lt;repository&gt;        &lt;!-">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2020-07-23T07:22:32.000Z">
-<meta property="article:modified_time" content="2020-07-27T02:32:46.985Z">
+<meta property="og:image" content="https://laoxshare.com/images/maven/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20200904133243.png">
+<meta property="og:image" content="https://laoxshare.com/images/maven/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20200904133344.png">
+<meta property="article:published_time" content="2020-09-04T05:05:18.000Z">
+<meta property="article:modified_time" content="2020-09-04T05:34:23.758Z">
 <meta property="article:author" content="老许">
-<meta property="article:tag" content="java">
-<meta property="article:tag" content="线程">
+<meta property="article:tag" content="maven">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://laoxshare.com/images/maven/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20200904133243.png">
 
 
 
@@ -121,13 +123,13 @@
 
 
 
-  <link rel="canonical" href="https://laoxshare.com/2020/07/23/java创建线程的方式/"/>
+  <link rel="canonical" href="https://laoxshare.com/2020/09/04/maven的命令-deploy/"/>
 
 
 
 
 
-  <title>java创建线程的方式 | 我的博客</title>
+  <title>maven的命令-deploy | 我的博客</title>
   
 
 
@@ -234,7 +236,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://laoxshare.com/2020/07/23/java%E5%88%9B%E5%BB%BA%E7%BA%BF%E7%A8%8B%E7%9A%84%E6%96%B9%E5%BC%8F/">
+    <link itemprop="mainEntityOfPage" href="https://laoxshare.com/2020/09/04/maven%E7%9A%84%E5%91%BD%E4%BB%A4-deploy/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="老许">
@@ -251,7 +253,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">java创建线程的方式</h1>
+          <h1 class="post-title" itemprop="name headline">maven的命令-deploy</h1>
         
 
         <div class="post-meta">
@@ -263,8 +265,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-07-23T15:22:32+08:00">
-                2020-07-23
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-09-04T13:05:18+08:00">
+                2020-09-04
               </time>
             
 
@@ -301,16 +303,22 @@
       
 
       
-        <h1 id="1-实现runable-接口"><a href="#1-实现runable-接口" class="headerlink" title="1 实现runable 接口"></a>1 实现runable 接口</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">public class RunnableTest implements Runnable &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void run() &#123;</span><br><span class="line">        System.out.println(1);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        new Thread(new RunnableTest()).start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="2-集成Thread类"><a href="#2-集成Thread类" class="headerlink" title="2 集成Thread类"></a>2 集成Thread类</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">public class ThreadTest extends Thread&#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        new Thread().start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="3-实现callable接口"><a href="#3-实现callable接口" class="headerlink" title="3 实现callable接口"></a>3 实现callable接口</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">public class CallableTest implements Callable  &#123;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public Object call() throws Exception &#123;</span><br><span class="line">        System.out.println(1);</span><br><span class="line">        return 1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) throws ExecutionException, InterruptedException &#123;</span><br><span class="line">        FutureTask futureTask&#x3D;new FutureTask(new CallableTest());</span><br><span class="line">        new Thread(futureTask).start();</span><br><span class="line">        futureTask.get();&#x2F;&#x2F;阻塞主线程</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>关于callable和runnable区别</strong></p>
-<ol>
-<li>首先runable是jdk1.1 而callable是jdk1.5</li>
-<li>runnable没有返回值通过重写run方法实现线程逻辑，callable有返回值，通过call方法</li>
-<li>callable可以抛出异常 ，runnable 只能内部处理</li>
-</ol>
-<h1 id="4-使用java线程池"><a href="#4-使用java线程池" class="headerlink" title="4 使用java线程池"></a>4 使用java线程池</h1><h2 id="4-1-java-线程池"><a href="#4-1-java-线程池" class="headerlink" title="4.1 java 线程池"></a>4.1 java 线程池</h2>
+        <h1 id="maven-deploy命令的含义"><a href="#maven-deploy命令的含义" class="headerlink" title="maven deploy命令的含义"></a>maven deploy命令的含义</h1><p>maven deploy命令是将你负责的模块发布到你配置的仓库位置。</p>
+<h1 id="多模块开发中使用deploy命令"><a href="#多模块开发中使用deploy命令" class="headerlink" title="多模块开发中使用deploy命令"></a>多模块开发中使用deploy命令</h1><h2 id="配置仓库位置，一般公司都会搭建自己的公司私服，用于加速获取jar以及管理公司的一些技术沉淀工具包之类的"><a href="#配置仓库位置，一般公司都会搭建自己的公司私服，用于加速获取jar以及管理公司的一些技术沉淀工具包之类的" class="headerlink" title="配置仓库位置，一般公司都会搭建自己的公司私服，用于加速获取jar以及管理公司的一些技术沉淀工具包之类的"></a>配置仓库位置，一般公司都会搭建自己的公司私服，用于加速获取jar以及管理公司的一些技术沉淀工具包之类的</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;distributionManagement&gt;</span><br><span class="line">    &lt;repository&gt;</span><br><span class="line">        &lt;!--稳定版本不会频繁修改的jar的存储位置--&gt;</span><br><span class="line">        &lt;id&gt;maven-release&lt;&#x2F;id&gt;</span><br><span class="line">        &lt;url&gt;http:&#x2F;&#x2F;XXXX&#x2F;repository&#x2F;maven-releases&#x2F;&lt;&#x2F;url&gt;</span><br><span class="line">    &lt;&#x2F;repository&gt;</span><br><span class="line">    &lt;snapshotRepository&gt;</span><br><span class="line">        &lt;!--快照版本--&gt;</span><br><span class="line">        &lt;id&gt;maven-snapshots&lt;&#x2F;id&gt;</span><br><span class="line">        &lt;url&gt;http:&#x2F;&#x2F;XXXX&#x2F;repository&#x2F;maven-snapshots&#x2F;&lt;&#x2F;url&gt;</span><br><span class="line">    &lt;&#x2F;snapshotRepository&gt;</span><br><span class="line">&lt;&#x2F;distributionManagement&gt;</span><br></pre></td></tr></table></figure>
+<p>Maven中的仓库分为两种，Snapshot快照仓库和Release发布仓库。Snapshot快照仓库用于保存开发过程中的不稳定版本，Release正式仓库则是用来保存稳定的发行版本。定义一个组件/模块为快照版本，只需要在pom.xml文件中在该模块的版本号后加上-SNAPSHOT即可（注意这里必须是大写），如下所示：</p>
+<pre><code>&lt;groupId&gt;com.xupp&lt;/groupId&gt;
+&lt;artifactId&gt;test&lt;/artifactId&gt;
+&lt;version&gt;0.1-SNAPSHOT&lt;/version&gt;
+&lt;packaging&gt;jar&lt;/packaging&gt;</code></pre><p>delopy会更具你定义的版本发布到不同的位置。</p>
+<h2 id="多人开发依赖和deploy的使用"><a href="#多人开发依赖和deploy的使用" class="headerlink" title="多人开发依赖和deploy的使用"></a>多人开发依赖和deploy的使用</h2><p>2020年微服务现在已经是一个公司基本必选的服务架构了，一个项目会被分成多个，每一个人会负责一个模块的开发，有些人就会分到公共组件或者公共api的开发。</p>
+<p>比如现在a开发一个公共的base包，定义如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;groupId&gt;com.a&lt;&#x2F;groupId&gt;</span><br><span class="line">&lt;artifactId&gt;base&lt;&#x2F;artifactId&gt;</span><br><span class="line">&lt;version&gt;0.1-SNAPSHOT&lt;&#x2F;version&gt;</span><br><span class="line">&lt;packaging&gt;jar&lt;&#x2F;packaging&gt;</span><br></pre></td></tr></table></figure>
+<p>上面定义程快照版本，每一次的deploy都会把当前的时间作为版本的一部分，如打包上去的可能是下面这样的jar，存放在私服的Snapshot快照仓库位置。</p>
+<pre><code>base-0.0.1-20200903.060612-43.jar(版本的后面加上了当前的时间）</code></pre><p>现在b模块开发其中系统中的一个业务模块，那么它需要使用这个base模块中的一些工具类，他只要在pom做如下定义</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;com.a&lt;&#x2F;groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;base&lt;&#x2F;artifactId&gt;</span><br><span class="line">    &lt;version&gt;0.1-SNAPSHOT&lt;&#x2F;version&gt;</span><br><span class="line">&lt;&#x2F;dependency&gt;</span><br></pre></td></tr></table></figure>
+<p>那么每一次base有更新进行deploy，只要使用的地方重新reimport进行拉取，会在本地仓库位置拉取快照仓库最新的快照版本。并且进行使用。具体的表现如下：</p>
+<p><img src="/images/maven/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20200904133243.png" alt=""><br><img src="/images/maven/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20200904133344.png" alt=""></p>
+
       
     </div>
     
@@ -327,9 +335,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/java/" rel="tag"># java</a>
-          
-            <a href="/tags/%E7%BA%BF%E7%A8%8B/" rel="tag"># 线程</a>
+            <a href="/tags/maven/" rel="tag"># maven</a>
           
         </div>
       
@@ -342,8 +348,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/07/23/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%AD%E7%9A%84%E8%A1%8C%E9%94%81%E3%80%81%E8%A1%A8%E9%94%81%E3%80%81%E8%AF%BB%E9%94%81%E3%80%81%E5%86%99%E9%94%81/" rel="next" title="数据库中的行锁、表锁、读锁、写锁">
-                <i class="fa fa-chevron-left"></i> 数据库中的行锁、表锁、读锁、写锁
+              <a href="/2020/09/03/springboot-mybatisplus%E5%A4%9A%E6%95%B0%E6%8D%AE%E6%BA%90%E9%85%8D%E7%BD%AE/" rel="next" title="springboot-mybatisplus多数据源配置">
+                <i class="fa fa-chevron-left"></i> springboot-mybatisplus多数据源配置
               </a>
             
           </div>
@@ -351,10 +357,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/07/23/java%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/" rel="prev" title="java内存模型">
-                java内存模型 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -477,7 +479,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-实现runable-接口"><span class="nav-number">1.</span> <span class="nav-text">1 实现runable 接口</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-集成Thread类"><span class="nav-number">2.</span> <span class="nav-text">2 集成Thread类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-实现callable接口"><span class="nav-number">3.</span> <span class="nav-text">3 实现callable接口</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-使用java线程池"><span class="nav-number">4.</span> <span class="nav-text">4 使用java线程池</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1-java-线程池"><span class="nav-number">4.1.</span> <span class="nav-text">4.1 java 线程池</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#maven-deploy命令的含义"><span class="nav-number">1.</span> <span class="nav-text">maven deploy命令的含义</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#多模块开发中使用deploy命令"><span class="nav-number">2.</span> <span class="nav-text">多模块开发中使用deploy命令</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#配置仓库位置，一般公司都会搭建自己的公司私服，用于加速获取jar以及管理公司的一些技术沉淀工具包之类的"><span class="nav-number">2.1.</span> <span class="nav-text">配置仓库位置，一般公司都会搭建自己的公司私服，用于加速获取jar以及管理公司的一些技术沉淀工具包之类的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多人开发依赖和deploy的使用"><span class="nav-number">2.2.</span> <span class="nav-text">多人开发依赖和deploy的使用</span></a></li></ol></li></ol></div>
             
 
           </div>
