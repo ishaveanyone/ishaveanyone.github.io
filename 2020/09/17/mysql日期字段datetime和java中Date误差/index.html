@@ -79,21 +79,17 @@
 
 
 
-<meta name="description" content="我们一般使用的是window通过 vm搭建linux 环境来作为初学Linux作为服务器，但是我们我们通常工作在不同的局域网中，家庭还有公司，所以在配置网卡的时候我们一直是通过配置固定的ip，但是我们经常需要linux能够连接外网，因为我们需要yum很多的额外资源，比如说，使用maven的时候 ，我们需要在镜像或者是maven中央仓库中down很多的第三方jar包。这个时候，我告诉大家一种配置">
+<meta name="description" content="前言之前用aop做日志记录的时候，对请求的时间差做了处理,用压测之后竟然发现了时间差出现了负数。。。。 问题分析aop的使用逻辑 12345678910111213141516171819202122232425262728    static Map&lt;String, Object&gt; log_aop_containter &#x3D; Collections.synchronizedM">
 <meta property="og:type" content="article">
-<meta property="og:title" content="vm（centos6）配置网卡（基于win7）">
-<meta property="og:url" content="https://laoxshare.com/2020/07/21/vm%EF%BC%88centos6%EF%BC%89%E9%85%8D%E7%BD%AE%E7%BD%91%E5%8D%A1%EF%BC%88%E5%9F%BA%E4%BA%8Ewin7%EF%BC%89/index.html">
+<meta property="og:title" content="mysql日期字段datetime和java中Date误差">
+<meta property="og:url" content="https://laoxshare.com/2020/09/17/mysql%E6%97%A5%E6%9C%9F%E5%AD%97%E6%AE%B5datetime%E5%92%8Cjava%E4%B8%ADDate%E8%AF%AF%E5%B7%AE/index.html">
 <meta property="og:site_name" content="我的博客">
-<meta property="og:description" content="我们一般使用的是window通过 vm搭建linux 环境来作为初学Linux作为服务器，但是我们我们通常工作在不同的局域网中，家庭还有公司，所以在配置网卡的时候我们一直是通过配置固定的ip，但是我们经常需要linux能够连接外网，因为我们需要yum很多的额外资源，比如说，使用maven的时候 ，我们需要在镜像或者是maven中央仓库中down很多的第三方jar包。这个时候，我告诉大家一种配置">
+<meta property="og:description" content="前言之前用aop做日志记录的时候，对请求的时间差做了处理,用压测之后竟然发现了时间差出现了负数。。。。 问题分析aop的使用逻辑 12345678910111213141516171819202122232425262728    static Map&lt;String, Object&gt; log_aop_containter &#x3D; Collections.synchronizedM">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://img-blog.csdn.net/20180325132608660?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FhYWFhMjQyODU3Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
-<meta property="og:image" content="https://img-blog.csdn.net/20180325134056451?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FhYWFhMjQyODU3Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
-<meta property="og:image" content="https://img-blog.csdn.net/20180325134109760?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FhYWFhMjQyODU3Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
-<meta property="article:published_time" content="2020-07-21T05:54:07.000Z">
-<meta property="article:modified_time" content="2020-07-21T05:55:22.623Z">
+<meta property="article:published_time" content="2020-09-17T02:03:43.000Z">
+<meta property="article:modified_time" content="2020-09-17T02:17:09.703Z">
 <meta property="article:author" content="老许">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://img-blog.csdn.net/20180325132608660?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FhYWFhMjQyODU3Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
 
 
 
@@ -123,13 +119,13 @@
 
 
 
-  <link rel="canonical" href="https://laoxshare.com/2020/07/21/vm（centos6）配置网卡（基于win7）/"/>
+  <link rel="canonical" href="https://laoxshare.com/2020/09/17/mysql日期字段datetime和java中Date误差/"/>
 
 
 
 
 
-  <title>vm（centos6）配置网卡（基于win7） | 我的博客</title>
+  <title>mysql日期字段datetime和java中Date误差 | 我的博客</title>
   
 
 
@@ -236,7 +232,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://laoxshare.com/2020/07/21/vm%EF%BC%88centos6%EF%BC%89%E9%85%8D%E7%BD%AE%E7%BD%91%E5%8D%A1%EF%BC%88%E5%9F%BA%E4%BA%8Ewin7%EF%BC%89/">
+    <link itemprop="mainEntityOfPage" href="https://laoxshare.com/2020/09/17/mysql%E6%97%A5%E6%9C%9F%E5%AD%97%E6%AE%B5datetime%E5%92%8Cjava%E4%B8%ADDate%E8%AF%AF%E5%B7%AE/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="老许">
@@ -253,7 +249,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">vm（centos6）配置网卡（基于win7）</h1>
+          <h1 class="post-title" itemprop="name headline">mysql日期字段datetime和java中Date误差</h1>
         
 
         <div class="post-meta">
@@ -265,8 +261,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-07-21T13:54:07+08:00">
-                2020-07-21
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-09-17T10:03:43+08:00">
+                2020-09-17
               </time>
             
 
@@ -303,23 +299,12 @@
       
 
       
-        <blockquote>
-<p> 我们一般使用的是window通过 vm搭建linux 环境来作为初学Linux作为服务器，但是我们我们通常工作在不同的局域网中，家庭还有公司，所以在配置网卡的时候我们一直是通过配置固定的ip，但是我们经常需要linux能够连接外网，因为我们需要yum很多的额外资源，比如说，使用maven的时候 ，我们需要在镜像或者是maven中央仓库中down很多的第三方jar包。这个时候，我告诉大家一种配置方式——通过配置本地的回环换卡。</p>
-</blockquote>
-<h1 id="window-与-linux-配置-回环网卡"><a href="#window-与-linux-配置-回环网卡" class="headerlink" title="(window 与 linux 配置)回环网卡"></a>(window 与 linux 配置)回环网卡</h1><p>网卡不就是给本地主机配置一个地址，能够让别人发现的地址，在win7 上面配置一个回环网卡，把自己和linux组成一个局域网，首先在linux 配置一块静态网卡，ip地址写死，<br>配置如下</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">DEVICE&#x3D;eth1</span><br><span class="line">BOOTPROTO&#x3D;static</span><br><span class="line">HWADDR&#x3D;00:50:56:2F:74:97</span><br><span class="line">IPV6INIT&#x3D;yes</span><br><span class="line">NM_CONTROLLED&#x3D;yes</span><br><span class="line">ONBOOT&#x3D;yes</span><br><span class="line">TYPE&#x3D;Ethernet</span><br><span class="line">USERECT&#x3D;no</span><br><span class="line">IPADDR&#x3D;192.168.10.133</span><br><span class="line">NETMASK&#x3D;255.255.255.0</span><br><span class="line">GETWAY&#x3D;192.168.10.1</span><br><span class="line">NAME&#x3D;eth1</span><br></pre></td></tr></table></figure>
-<p>下面是我搭建的回环网卡</p>
-<blockquote>
-<p> 怎么配置一个回环网卡：<a href="https://jingyan.baidu.com/article/046a7b3eef6d69f9c27fa9ea.html" target="_blank" rel="noopener">https://jingyan.baidu.com/article/046a7b3eef6d69f9c27fa9ea.html</a><br> <img src="https://img-blog.csdn.net/20180325132608660?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FhYWFhMjQyODU3Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
-</blockquote>
-<p><b> ok主机与 虚拟机上面的linux 就能够通过192.168.10.* 这个类似局域网的地址进行通信了呢</p>
-<ul>
-<li>补充<br> 使用这种方式请在vm 做如下设置<br> <img src="https://img-blog.csdn.net/20180325134056451?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FhYWFhMjQyODU3Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"><br><img src="https://img-blog.csdn.net/20180325134109760?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FhYWFhMjQyODU3Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></li>
-</ul>
-<p>注意上面的mark地址必须要和你的静态网卡的HWADDR地址一样，而且如果你在vm做了多个这样的配置，必须要保证每一个linux 网卡中静态mark地址是唯一的</p>
-<h1 id="配置动态ip网卡-vm-中设置桥接模式"><a href="#配置动态ip网卡-vm-中设置桥接模式" class="headerlink" title="配置动态ip网卡(vm 中设置桥接模式)"></a>配置动态ip网卡(vm 中设置桥接模式)</h1><p>配置动态网卡很简单，不就是把</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;b&gt;BOOTPROT&#x3D;dhcp      &#x2F;&#x2F;启动类型 dhcp|static</span><br></pre></td></tr></table></figure>
-<p>上面的是告诉，linux 使用的自动获取ip所以这样一来不管我们在哪里都能够和外网互连了呢~</p>
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>之前用aop做日志记录的时候，对请求的时间差做了处理,用压测之后竟然发现了时间差出现了负数。。。。</p>
+<h1 id="问题分析"><a href="#问题分析" class="headerlink" title="问题分析"></a>问题分析</h1><p>aop的使用逻辑</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">    static Map&lt;String, Object&gt; log_aop_containter &#x3D; Collections.synchronizedMap(new HashMap());</span><br><span class="line"></span><br><span class="line">@Before(&quot;pointCut()&quot;)</span><br><span class="line">public void doBefore(JoinPoint joinPoint)&#123;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;存储一条数据，并且将当前数据id和当前的线程id绑定存储在log_aop_containter</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@AfterReturning(returning&#x3D;&quot;obj&quot;, pointcut &#x3D; &quot;pointCut()&quot;)</span><br><span class="line">public void doAfterReturnig(Object obj)&#123;</span><br><span class="line">    handleOutputMessage(obj,1);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@AfterThrowing(value &#x3D; &quot;pointCut()&quot;,throwing &#x3D; &quot;e&quot;)</span><br><span class="line">public void afterThrowing(JoinPoint joinPoint,Exception e) &#123;</span><br><span class="line">    handleOutputMessage(e.getMessage(),0);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@After(value &#x3D; &quot;pointCut()&quot;)</span><br><span class="line">public void after(JoinPoint joinPoint) &#123;</span><br><span class="line">&#x2F;&#x2F;出问题的地方</span><br><span class="line">&#x2F;&#x2F;通过当前的线程id获取数据id并且从数据库中查询数据，获取before存储的开始时间-当前的时间，获得时间差</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public void handleOutputMessage(Object obj,int success)&#123;</span><br><span class="line">&#x2F;&#x2F;通过线程id获取数据，保存最终的执行结果和是否成功</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="使用压测"><a href="#使用压测" class="headerlink" title="使用压测"></a>使用压测</h1><p>做完压测之后，竟然发现很多的 timeout是负数，后面查询了很多，原来是因为mysql的datetime类型不是时间戳，所以精度只到秒，java.util.Date是一个毫秒数时间，所以java.util.Date到mysql datetime，会面临精度丢失。 如果场景比较严格，这会导致问题，比如我这边可能从数据库拿到的是四舍五入的数据，开始的比结束的时间还大（因为我计算的是毫秒）。</p>
+<p>在mysql-connector-java版本&lt;=5.1.22是，会直接丢弃毫秒数，但是在之后的版本，会进行四舍五入。</p>
+<h1 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h1><p>将开始时间也存放到map中，不从数据库中获取</p>
 
       
     </div>
@@ -344,8 +329,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/07/21/%E4%BD%BF%E7%94%A8nginx%E4%BB%A5%E5%8F%8Aopenssl%E5%AE%9E%E7%8E%B0https%E8%BD%AChttp/" rel="next" title="使用nginx以及openssl实现https转http">
-                <i class="fa fa-chevron-left"></i> 使用nginx以及openssl实现https转http
+              <a href="/2020/09/13/sringAOP%E5%BC%82%E5%B8%B8%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1%E6%9C%AA%E6%8F%90%E4%BA%A4/" rel="next" title="sringAOP异常数据库事务未提交">
+                <i class="fa fa-chevron-left"></i> sringAOP异常数据库事务未提交
               </a>
             
           </div>
@@ -354,8 +339,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2020/07/22/java%E5%AE%9E%E7%8E%B0%E6%8E%92%E5%BA%8F%E4%B9%9D%E5%A4%A7%E7%AE%97%E6%B3%95/" rel="prev" title="java实现排序九大算法">
-                java实现排序九大算法 <i class="fa fa-chevron-right"></i>
+              <a href="/2020/09/29/%E5%88%86%E5%B8%83%E5%BC%8Fid/" rel="prev" title="分布式id">
+                分布式id <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -479,7 +464,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#window-与-linux-配置-回环网卡"><span class="nav-number">1.</span> <span class="nav-text">(window 与 linux 配置)回环网卡</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#配置动态ip网卡-vm-中设置桥接模式"><span class="nav-number">2.</span> <span class="nav-text">配置动态ip网卡(vm 中设置桥接模式)</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#问题分析"><span class="nav-number">2.</span> <span class="nav-text">问题分析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用压测"><span class="nav-number">3.</span> <span class="nav-text">使用压测</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#解决"><span class="nav-number">4.</span> <span class="nav-text">解决</span></a></li></ol></div>
             
 
           </div>
