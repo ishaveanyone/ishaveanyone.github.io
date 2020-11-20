@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="kafka," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="前言突然出现一个任务需要对kafka处理的数据进行插队操作（内心小崩溃。。。），研究了一下，还是可以使用拦截器进行实现这样的效果的。 拦截器（Interceptor）是早在Kafka 0.10.0.0中就已经引入的一个功能，Kafka一共有两种拦截器：生产者拦截器和消费者拦截器。 ProducerInterceptor先看代码 12345678910111213141516171819202122">
+<meta property="og:type" content="article">
+<meta property="og:title" content="浅尝springForKafka源码">
+<meta property="og:url" content="https://laoxshare.com/2020/10/21/%E6%B5%85%E5%B0%9DspringForKafka%E6%BA%90%E7%A0%81/index.html">
+<meta property="og:site_name" content="我的博客">
+<meta property="og:description" content="前言突然出现一个任务需要对kafka处理的数据进行插队操作（内心小崩溃。。。），研究了一下，还是可以使用拦截器进行实现这样的效果的。 拦截器（Interceptor）是早在Kafka 0.10.0.0中就已经引入的一个功能，Kafka一共有两种拦截器：生产者拦截器和消费者拦截器。 ProducerInterceptor先看代码 12345678910111213141516171819202122">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-10-21T10:16:30.000Z">
+<meta property="article:modified_time" content="2020-10-22T02:19:24.167Z">
+<meta property="article:author" content="老许">
+<meta property="article:tag" content="kafka">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://laoxshare.com/2020/10/21/浅尝springForKafka源码/"/>
+
+
+
+
+
+  <title>浅尝springForKafka源码 | 我的博客</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">我的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://laoxshare.com/2020/10/21/%E6%B5%85%E5%B0%9DspringForKafka%E6%BA%90%E7%A0%81/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="老许">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="我的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">浅尝springForKafka源码</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-10-21T18:16:30+08:00">
+                2020-10-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>突然出现一个任务需要对kafka处理的数据进行插队操作（内心小崩溃。。。），研究了一下，还是可以使用拦截器进行实现这样的效果的。</p>
+<h1 id="拦截器（Interceptor）"><a href="#拦截器（Interceptor）" class="headerlink" title="拦截器（Interceptor）"></a>拦截器（Interceptor）</h1><p>是早在Kafka 0.10.0.0中就已经引入的一个功能，Kafka一共有两种拦截器：生产者拦截器和消费者拦截器。</p>
+<h2 id="ProducerInterceptor"><a href="#ProducerInterceptor" class="headerlink" title="ProducerInterceptor"></a>ProducerInterceptor</h2><p>先看代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">@Slf4j</span><br><span class="line">@Service</span><br><span class="line">public class MyProducerInterceptor implements ProducerInterceptor &#123;</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F;在发送broke之前的一个操作，可以对数据进行加工处理或者进行topic pationtion重新指向     </span><br><span class="line">    @Override</span><br><span class="line">    public ProducerRecord onSend(ProducerRecord producerRecord) &#123;</span><br><span class="line">        return null;</span><br><span class="line">    &#125;</span><br><span class="line">    &#x2F;**</span><br><span class="line">    * KafkaProducer 会在消息被应答（Acknowledgement）之前或消息发送失败时调用生产者拦截器的 onAcknowledgement（）方法</span><br><span class="line">    * </span><br><span class="line">    *</span><br><span class="line">    **&#x2F;</span><br><span class="line">    @Override</span><br><span class="line">    public void onAcknowledgement(RecordMetadata recordMetadata, Exception e) &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F;close（）方法主要用于在关闭拦截器时执行一些资源的清理工作。</span><br><span class="line">    @Override</span><br><span class="line">    public void close() &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void configure(Map&lt;String, ?&gt; map) &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="onSend"><a href="#onSend" class="headerlink" title="onSend"></a>onSend</h3><p>就是在发送之前对数据的处理</p>
+<h3 id="onAcknowledgement"><a href="#onAcknowledgement" class="headerlink" title="onAcknowledgement"></a>onAcknowledgement</h3><p>接收kafka服务端接受到消息响应的处理</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">    服务端应答的模式可以通过acks进行设置: 1 0 -1</span><br><span class="line">1 : 在生产者发送消息之后，从节点保存完数据，就会进行响应，如果消息无法写入leader副本，比如在leader 副本崩溃、重新选举新的 leader 副本的过程中，那么生产者就会收到一个错误的响应，为了避免消息丢失，生产者可以选择重发消息。如果消息写入leader副本并返回成功响应给生产者，且在被其他follower副本拉取之前leader副本崩溃，那么此时消息还是会丢失，因为新选举的leader副本中并没有这条对应的消息。acks设置为1，是消息可靠性和吞吐量之间的折中方案。</span><br><span class="line"></span><br><span class="line">0 : acks&#x3D;0。生产者发送消息之后不需要等待任何服务端的响应。如果在消息从发送到写入Kafka的过程中出现某些异常，导致Kafka并没有收到这条消息，那么生产者也无从得知，消息也就丢失了。在其他配置环境相同的情况下，acks 设置为 0 可以达到最大的吞吐量。</span><br><span class="line"></span><br><span class="line">-1: acks&#x3D;-1或acks&#x3D;all。生产者在消息发送之后，需要等待ISR中的所有副本都成功写入消息之后才能够收到来自服务端的成功响应。在其他配置环境相同的情况下，acks 设置为-1（all）可以达到最强的可靠性。但这并不意味着消息就一定可靠，因为ISR中可能只有leader副本，这样就退化成了acks&#x3D;1的情况</span><br></pre></td></tr></table></figure>
+<h3 id="close"><a href="#close" class="headerlink" title="close"></a>close</h3><p>方法主要用于在关闭拦截器时执行一些资源的清理工作。</p>
+<h3 id="configure"><a href="#configure" class="headerlink" title="configure"></a>configure</h3><p>可以获取到生产者的配置 </p>
+<h2 id="ConsumerInterceptor"><a href="#ConsumerInterceptor" class="headerlink" title="ConsumerInterceptor"></a>ConsumerInterceptor</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">AtomicInteger atomicInteger&#x3D;new AtomicInteger(0);</span><br><span class="line">@Override</span><br><span class="line">public ConsumerRecords&lt;String, String&gt; onConsume(ConsumerRecords&lt;String, String&gt; consumerRecords) &#123;</span><br><span class="line">    </span><br><span class="line">    return new ConsumerRecords( );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@Override</span><br><span class="line">public void onCommit(Map&lt;TopicPartition, OffsetAndMetadata&gt; offsets) &#123;</span><br><span class="line">    offsets.forEach((k,v)-&gt;&#123;</span><br><span class="line">        System.out.println(k+&quot;---&quot;+v);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">private String getJsonTrackingMessage(ConsumerRecord&lt;String, String&gt; record) &#123;</span><br><span class="line">    return record.value();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;拦截器关闭做一些操作</span><br><span class="line">@Override</span><br><span class="line">public void close() &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@Override</span><br><span class="line">public void configure(Map&lt;String, ?&gt; configs) &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="onConsume"><a href="#onConsume" class="headerlink" title="onConsume"></a>onConsume</h3><p>在consumer poll 返回之前的一个操作，一般我们如果没有设置（MAX_POLL_RECORDS_CONFIG，这个配置在0.9之后才有用） 那么默认poll返回的数据是500条，注意这个500也许来自多个分区，因为一个消费者可能被分配到多个分区。我们可能对poll到的数据进行重新修改或者过滤，然后返回一个新的ConsumerRecords，注意poll之后的commit是对服务端提交消费数据的偏移量，如果修改或者新增数据，需要注意如果修改了offset数据是否会造成重复消费的问题</p>
+<h3 id="onCommit"><a href="#onCommit" class="headerlink" title="onCommit"></a>onCommit</h3><p>在commit成功之后，这个方法我们可以获取到消费数据的具体偏移量</p>
+<h3 id="onClose"><a href="#onClose" class="headerlink" title="onClose"></a>onClose</h3><p>和之前的生产者一样作用</p>
+<h1 id="实现方案"><a href="#实现方案" class="headerlink" title="实现方案"></a>实现方案</h1><p>实现一个消费者拦截器，并且重新构造返回的消费数据，如果是新加入的消费数据，就不进行消费，如下面onConsume测试代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">int mark &#x3D; atomicInteger.incrementAndGet();</span><br><span class="line">Map&lt;TopicPartition, List&lt;ConsumerRecord&lt;String, String&gt;&gt;&gt; newRecords</span><br><span class="line">        &#x3D; new HashMap&lt;&gt;();</span><br><span class="line">ConsumerRecord consumerRecord&#x3D;</span><br><span class="line">        new ConsumerRecord(&quot;xpp_test&quot;,0,0,null,1000);</span><br><span class="line">for (TopicPartition tp : records.partitions()) &#123;</span><br><span class="line">    List&lt;ConsumerRecord&lt;String, String&gt;&gt; tpRecords &#x3D;</span><br><span class="line">            records.records(tp);</span><br><span class="line">    List&lt;ConsumerRecord&lt;String, String&gt;&gt; newTpRecords &#x3D; new ArrayList&lt;&gt;();</span><br><span class="line">    newTpRecords.add(consumerRecord);</span><br><span class="line">    newTpRecords.addAll(tpRecords);</span><br><span class="line">    if (!newTpRecords.isEmpty()) &#123;</span><br><span class="line">        newRecords.put(tp, newTpRecords);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">return new ConsumerRecords&lt;&gt;(newRecords);</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/kafka/" rel="tag"># kafka</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/10/13/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E7%BA%BF%E4%B8%8A%E6%B5%81%E9%87%8F%E5%BC%82%E5%B8%B8%E5%8E%9F%E5%9B%A0/" rel="next" title="记录一次线上流量异常原因">
+                <i class="fa fa-chevron-left"></i> 记录一次线上流量异常原因
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">老许</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7Carchive">
+              
+                  <span class="site-state-item-count">33</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#拦截器（Interceptor）"><span class="nav-number">2.</span> <span class="nav-text">拦截器（Interceptor）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ProducerInterceptor"><span class="nav-number">2.1.</span> <span class="nav-text">ProducerInterceptor</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#onSend"><span class="nav-number">2.1.1.</span> <span class="nav-text">onSend</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#onAcknowledgement"><span class="nav-number">2.1.2.</span> <span class="nav-text">onAcknowledgement</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#close"><span class="nav-number">2.1.3.</span> <span class="nav-text">close</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configure"><span class="nav-number">2.1.4.</span> <span class="nav-text">configure</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ConsumerInterceptor"><span class="nav-number">2.2.</span> <span class="nav-text">ConsumerInterceptor</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#onConsume"><span class="nav-number">2.2.1.</span> <span class="nav-text">onConsume</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#onCommit"><span class="nav-number">2.2.2.</span> <span class="nav-text">onCommit</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#onClose"><span class="nav-number">2.2.3.</span> <span class="nav-text">onClose</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实现方案"><span class="nav-number">3.</span> <span class="nav-text">实现方案</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">老许</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

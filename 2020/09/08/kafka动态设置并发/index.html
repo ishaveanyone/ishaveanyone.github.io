@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="kafka," />
 
 
 
@@ -79,16 +79,17 @@
 
 
 
-<meta name="description" content="解决方案: 在对工程升级访问协议的时候，其实可以通过代理或者对tomcat进行配置，我是通过tomcat进行设置，通过jdk 生成证书，步骤如下： 12345使用keytool命令生成证书tomcat.keystorekeytool -genkey -v -alias tomcat -keyalg RSA -keystore tomcat.keystore -validity 36500注意：最后">
+<meta name="description" content="kafka 并发springboot setConcurrency 决定kafka 并发，kafka 的分区决定了并发上限 ，concurrency&lt;&#x3D;分区数 ，如果大于分区数并发会等于分区 每个分区都是一个有序的、不可变的记录序列，这些记录不断附加到结构化提交日志。分区中的记录被分配给一个顺序 ID 号，称为唯一标识分区内每个记录的偏移量。 KafkaBootstrapConfigurat">
 <meta property="og:type" content="article">
-<meta property="og:title" content="使用nginx以及openssl实现https转http">
-<meta property="og:url" content="https://laoxshare.com/2020/07/21/%E4%BD%BF%E7%94%A8nginx%E4%BB%A5%E5%8F%8Aopenssl%E5%AE%9E%E7%8E%B0https%E8%BD%AChttp/index.html">
+<meta property="og:title" content="kafka动态设置并发">
+<meta property="og:url" content="https://laoxshare.com/2020/09/08/kafka%E5%8A%A8%E6%80%81%E8%AE%BE%E7%BD%AE%E5%B9%B6%E5%8F%91/index.html">
 <meta property="og:site_name" content="我的博客">
-<meta property="og:description" content="解决方案: 在对工程升级访问协议的时候，其实可以通过代理或者对tomcat进行配置，我是通过tomcat进行设置，通过jdk 生成证书，步骤如下： 12345使用keytool命令生成证书tomcat.keystorekeytool -genkey -v -alias tomcat -keyalg RSA -keystore tomcat.keystore -validity 36500注意：最后">
+<meta property="og:description" content="kafka 并发springboot setConcurrency 决定kafka 并发，kafka 的分区决定了并发上限 ，concurrency&lt;&#x3D;分区数 ，如果大于分区数并发会等于分区 每个分区都是一个有序的、不可变的记录序列，这些记录不断附加到结构化提交日志。分区中的记录被分配给一个顺序 ID 号，称为唯一标识分区内每个记录的偏移量。 KafkaBootstrapConfigurat">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2020-07-21T05:39:57.000Z">
-<meta property="article:modified_time" content="2020-08-20T06:42:36.203Z">
+<meta property="article:published_time" content="2020-09-08T03:20:30.000Z">
+<meta property="article:modified_time" content="2020-11-20T10:08:55.233Z">
 <meta property="article:author" content="老许">
+<meta property="article:tag" content="kafka">
 <meta name="twitter:card" content="summary">
 
 
@@ -119,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="https://laoxshare.com/2020/07/21/使用nginx以及openssl实现https转http/"/>
+  <link rel="canonical" href="https://laoxshare.com/2020/09/08/kafka动态设置并发/"/>
 
 
 
 
 
-  <title>使用nginx以及openssl实现https转http | 我的博客</title>
+  <title>kafka动态设置并发 | 我的博客</title>
   
 
 
@@ -232,7 +233,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://laoxshare.com/2020/07/21/%E4%BD%BF%E7%94%A8nginx%E4%BB%A5%E5%8F%8Aopenssl%E5%AE%9E%E7%8E%B0https%E8%BD%AChttp/">
+    <link itemprop="mainEntityOfPage" href="https://laoxshare.com/2020/09/08/kafka%E5%8A%A8%E6%80%81%E8%AE%BE%E7%BD%AE%E5%B9%B6%E5%8F%91/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="老许">
@@ -249,7 +250,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">使用nginx以及openssl实现https转http</h1>
+          <h1 class="post-title" itemprop="name headline">kafka动态设置并发</h1>
         
 
         <div class="post-meta">
@@ -261,8 +262,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-07-21T13:39:57+08:00">
-                2020-07-21
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-09-08T11:20:30+08:00">
+                2020-09-08
               </time>
             
 
@@ -299,26 +300,37 @@
       
 
       
-        <p><strong>解决方案:</strong></p>
-<p>在对工程升级访问协议的时候，其实可以通过代理或者对tomcat进行配置，我是通过tomcat进行设置，通过jdk 生成证书，步骤如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">使用keytool命令生成证书tomcat.keystore</span><br><span class="line"></span><br><span class="line">keytool -genkey -v -alias tomcat -keyalg RSA -keystore tomcat.keystore -validity 36500</span><br><span class="line"></span><br><span class="line">注意：最后一步的输入tomcat密钥口令一定要和第一步输入的密码一致，不然tomcat启动就报错</span><br></pre></td></tr></table></figure>
+        <h1 id="kafka-并发"><a href="#kafka-并发" class="headerlink" title="kafka 并发"></a>kafka 并发</h1><p>springboot setConcurrency 决定kafka 并发，kafka 的分区决定了并发上限 ，concurrency&lt;=分区数 ，如果大于分区数并发会等于分区</p>
+<p>每个分区都是一个有序的、不可变的记录序列，这些记录不断附加到结构化提交日志。分区中的记录被分配给一个顺序 ID 号，称为唯一标识分区内每个记录的偏移量。</p>
+<p>KafkaBootstrapConfiguration</p>
+<p>@SuppressWarnings(“rawtypes”)<br>@Bean(name = KafkaListenerConfigUtils.KAFKA_LISTENER_ANNOTATION_PROCESSOR_BEAN_NAME)<br>@Role(BeanDefinition.ROLE_INFRASTRUCTURE)<br>public KafkaListenerAnnotationBeanPostProcessor kafkaListenerAnnotationProcessor() {<br>    return new KafkaListenerAnnotationBeanPostProcessor();<br>}</p>
+<p>@Bean(name = KafkaListenerConfigUtils.KAFKA_LISTENER_ENDPOINT_REGISTRY_BEAN_NAME)<br>public KafkaListenerEndpointRegistry defaultKafkaListenerEndpointRegistry() {<br>    return new KafkaListenerEndpointRegistry();<br>}</p>
+<p>ConcurrentKafkaListenerContainerFactory   </p>
+<p>ConcurrentMessageListenerContainer 会进行创建 3 个数 KafkaMessageListenerContainer（多个）</p>
+<p>KafkaMessageListenerContainer（多个）</p>
+<pre><code>for (int i = 0; i &lt; this.concurrency; i++) {
+    KafkaMessageListenerContainer&lt;K, V&gt; container;
+    if (topicPartitions == null) {
+        container = new KafkaMessageListenerContainer&lt;&gt;(this.consumerFactory, containerProperties);
+    }
+    else {
+        container = new KafkaMessageListenerContainer&lt;&gt;(this.consumerFactory, containerProperties,
+                partitionSubset(containerProperties, i));
+    }
+    if (getBeanName() != null) {
+        container.setBeanName(getBeanName() + &quot;-&quot; + i);
+    }
+    if (getApplicationEventPublisher() != null) {
+        container.setApplicationEventPublisher(getApplicationEventPublisher());
+    }
+    container.setClientIdSuffix(&quot;-&quot; + i);
+    container.start();
+    this.containers.add(container);
+}</code></pre><p>KafkaMessageListenerContainer（多个）中包含 ListenerConsumer</p>
+<p>SimpleAsyncTaskExecutor（ CustomizableThreadCreator   AsyncListenableTaskExecutor   TaskExecutor） 用于启动执行consumer</p>
+<h1 id="如何动态设置并发"><a href="#如何动态设置并发" class="headerlink" title="如何动态设置并发"></a>如何动态设置并发</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">@GetMapping(&quot;&#x2F;stop&quot;)</span><br><span class="line">   public String stop()&#123;</span><br><span class="line">       KafkaListenerEndpointRegistry  kafkaListenerEndpointRegistry&#x3D;</span><br><span class="line">               context.getBean(KafkaListenerConfigUtils.KAFKA_LISTENER_ENDPOINT_REGISTRY_BEAN_NAME,</span><br><span class="line">                       KafkaListenerEndpointRegistry.class);</span><br><span class="line"></span><br><span class="line">       Collection&lt;MessageListenerContainer&gt; containers&#x3D; kafkaListenerEndpointRegistry.getListenerContainers();</span><br><span class="line">       ConcurrentMessageListenerContainer concurrentMessageListenerContainer</span><br><span class="line">               &#x3D;(ConcurrentMessageListenerContainer)containers.iterator().next();</span><br><span class="line">       concurrentMessageListenerContainer.stop();</span><br><span class="line">       return &quot;&quot;;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   @GetMapping(&quot;&#x2F;start&quot;)</span><br><span class="line">   public String start(int num)&#123;</span><br><span class="line">       KafkaListenerEndpointRegistry  kafkaListenerEndpointRegistry&#x3D;</span><br><span class="line">               context.getBean(KafkaListenerConfigUtils.KAFKA_LISTENER_ENDPOINT_REGISTRY_BEAN_NAME,</span><br><span class="line">                       KafkaListenerEndpointRegistry.class);</span><br><span class="line"></span><br><span class="line">       Collection&lt;MessageListenerContainer&gt; containers&#x3D; kafkaListenerEndpointRegistry.getListenerContainers();</span><br><span class="line">       ConcurrentMessageListenerContainer concurrentMessageListenerContainer</span><br><span class="line">               &#x3D;(ConcurrentMessageListenerContainer)containers.iterator().next();</span><br><span class="line">       concurrentMessageListenerContainer.setConcurrency(num);</span><br><span class="line">       concurrentMessageListenerContainer.start();</span><br><span class="line">       return &quot;&quot;;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<p>如上，通过获取到KafkaListenerEndpointRegistry 然后可以获取到对应的管理的 containers ,通过重启ConcurrentMessageListenerContainer，重新创建MessageListenerContainer数量达到动态修改业务并发，但是注意同一组的topic将发生重平衡。</p>
 
-
-<p><strong>出现的问题:</strong></p>
-<p>在请求网站的过程中发现，存在很多资源无法访问的情况，因为我们在打开首页的时候，又去请求了其他服务器下的资源。百度一番发现原来是，在https页面只通过https 去请求资源，网上有很多的人说可以去掉请求的协议，浏览器会默认通过https请求，失败转而使用http请求，但是这里我做了处理之后仍然不起作用，不知道是不是ajax请求不起作用，（有空测试下在补充）。所以没有办法，只能通过使用nginx代理https。其中ngnix 以及openssl使用如下。</p>
-<ul>
-<li>nginx<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">由于在window中使用nginx，直接下载nginx的压缩包，解压之后，配置</span><br><span class="line">    # HTTPS server</span><br><span class="line">   #</span><br><span class="line">   #server &#123;</span><br><span class="line">   #    listen       443 ssl;</span><br><span class="line">   #    server_name  localhost;</span><br><span class="line"></span><br><span class="line">   #    ssl_certificate      cert.pem;</span><br><span class="line">   #    ssl_certificate_key  cert.key;</span><br><span class="line"></span><br><span class="line">   #    ssl_session_cache    shared:SSL:1m;</span><br><span class="line">   #    ssl_session_timeout  5m;</span><br><span class="line"></span><br><span class="line">   #    ssl_ciphers  HIGH:!aNULL:!MD5;</span><br><span class="line">   #    ssl_prefer_server_ciphers  on;</span><br><span class="line"></span><br><span class="line">   #    location &#x2F; &#123;</span><br><span class="line">   #        root   html;</span><br><span class="line">   #        index  index.html index.htm;</span><br><span class="line">   #    &#125;</span><br><span class="line">   #&#125;</span><br><span class="line"></span><br><span class="line">ex:</span><br><span class="line">   将上面的打开进行配置，在配置中需要提供证书，所以通过openssl进行证书生成</span><br></pre></td></tr></table></figure>
-
-
-</li>
-</ul>
-<ul>
-<li>openssl</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">同样是在window下使用，所以直接下载安装程序，网上有说官网提供了Win32OpenSSL_Light-1_1_0h.exe，下载之后，安装提示要把ddl放在system还是自己的选择的目录中，果断选择自定义的bin目录。之后进行证书生成，步骤如下：</span><br><span class="line">1) 生成RSA私钥</span><br><span class="line">openssl genrsa -des3 -out server.key 1024</span><br><span class="line"></span><br><span class="line">2) 生成签名</span><br><span class="line">openssl req -new -key server.key -out server.csr</span><br><span class="line"></span><br><span class="line">3) 根据已生成的RSA私钥输出无加密的私钥</span><br><span class="line">openssl rsa -in server.key -out server_nopass.key</span><br><span class="line"></span><br><span class="line">4) 使用签名和私钥生成crt证书</span><br><span class="line">openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt</span><br><span class="line"></span><br><span class="line">*注意: *记住在nginx 配置的时候，在window中把生成的证书放在nginx conf目录中，否则会出现找不到证书的错误</span><br></pre></td></tr></table></figure>
-
-<p><strong>仍然出现问题:</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">由于是openssl签发的证书，并不能在代码，比如我使用ajax请求对应的地址可以成功，一般我们请求https 地址，如果是不受信任的证书，浏览器都会提示，私密链接，我们会选择高级继续访问，如果不是有效的证书，在代码中调用依然是不成功的。</span><br><span class="line"></span><br><span class="line">fine，白忙活了，当做学习一波吧~~~~</span><br></pre></td></tr></table></figure>
       
     </div>
     
@@ -333,6 +345,12 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/kafka/" rel="tag"># kafka</a>
+          
+        </div>
+      
 
       
       
@@ -342,8 +360,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/07/21/%E6%90%AD%E5%BB%BAgitlab/" rel="next" title="搭建gitlab">
-                <i class="fa fa-chevron-left"></i> 搭建gitlab
+              <a href="/2020/09/08/kafka%E4%B8%80%E4%BA%9B%E5%9D%91/" rel="next" title="kafka一些坑">
+                <i class="fa fa-chevron-left"></i> kafka一些坑
               </a>
             
           </div>
@@ -352,8 +370,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2020/07/21/vm%EF%BC%88centos6%EF%BC%89%E9%85%8D%E7%BD%AE%E7%BD%91%E5%8D%A1%EF%BC%88%E5%9F%BA%E4%BA%8Ewin7%EF%BC%89/" rel="prev" title="vm（centos6）配置网卡（基于win7）">
-                vm（centos6）配置网卡（基于win7） <i class="fa fa-chevron-right"></i>
+              <a href="/2020/09/13/sringAOP%E5%BC%82%E5%B8%B8%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1%E6%9C%AA%E6%8F%90%E4%BA%A4/" rel="prev" title="sringAOP异常数据库事务未提交">
+                sringAOP异常数据库事务未提交 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -406,8 +424,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -458,6 +485,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#kafka-并发"><span class="nav-number">1.</span> <span class="nav-text">kafka 并发</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#如何动态设置并发"><span class="nav-number">2.</span> <span class="nav-text">如何动态设置并发</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
