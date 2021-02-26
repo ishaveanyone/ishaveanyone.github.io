@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="ElasticSearch6.5.4," />
+  <meta name="keywords" content="Hexo, NexT" />
 
 
 
@@ -79,20 +79,17 @@
 
 
 
-<meta name="description" content="关于esES是一个基于RESTful web接口并且构建在Apache Lucene之上的开源分布式搜索引擎。 同时ES还是一个分布式文档数据库，其中每个字段均可被索引，而且每个字段的数据均可被搜索，能够横向扩展至数以百计的服务器存储以及处理PB级的数据。 可以在极短的时间内存储、搜索和分析大量的数据。通常作为具有复杂搜索场景情况下的核心发动机。 ES就是为高可用和可扩展而生的。一方面可以通过升级">
+<meta name="description" content="测试项目地址https:&#x2F;&#x2F;github.com&#x2F;ishaveanyone&#x2F;springboot&#x2F;tree&#x2F;master&#x2F;springboot-kafka-monitior 前言公司的消息队列使用的kafka框架，但是目前线上出现某几个分区频繁堵塞，而其他分区空闲的情况，导致白白浪费了服务器的性能。 解决方案使用kafka拦截器，我们的目标是让所有的kafka分区对应的消费线程都能满负荷去跑数据，">
 <meta property="og:type" content="article">
-<meta property="og:title" content="ElasticSearch（一）">
-<meta property="og:url" content="https://laoxshare.com/2020/08/02/ElasticSearch%EF%BC%88%E4%B8%80%EF%BC%89/index.html">
+<meta property="og:title" content="分布式环境下kafka如何解决分区堵塞，无法实现满负荷消费情况">
+<meta property="og:url" content="https://laoxshare.com/2021/02/26/%E5%88%86%E5%B8%83%E5%BC%8F%E7%8E%AF%E5%A2%83%E4%B8%8Bkafka%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%E5%88%86%E5%8C%BA%E5%A0%B5%E5%A1%9E%EF%BC%8C%E6%97%A0%E6%B3%95%E5%AE%9E%E7%8E%B0%E6%BB%A1%E8%B4%9F%E8%8D%B7%E6%B6%88%E8%B4%B9%E6%83%85%E5%86%B5/index.html">
 <meta property="og:site_name" content="我的博客">
-<meta property="og:description" content="关于esES是一个基于RESTful web接口并且构建在Apache Lucene之上的开源分布式搜索引擎。 同时ES还是一个分布式文档数据库，其中每个字段均可被索引，而且每个字段的数据均可被搜索，能够横向扩展至数以百计的服务器存储以及处理PB级的数据。 可以在极短的时间内存储、搜索和分析大量的数据。通常作为具有复杂搜索场景情况下的核心发动机。 ES就是为高可用和可扩展而生的。一方面可以通过升级">
+<meta property="og:description" content="测试项目地址https:&#x2F;&#x2F;github.com&#x2F;ishaveanyone&#x2F;springboot&#x2F;tree&#x2F;master&#x2F;springboot-kafka-monitior 前言公司的消息队列使用的kafka框架，但是目前线上出现某几个分区频繁堵塞，而其他分区空闲的情况，导致白白浪费了服务器的性能。 解决方案使用kafka拦截器，我们的目标是让所有的kafka分区对应的消费线程都能满负荷去跑数据，">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://laoxshare.com/images/es/6563032-d5eefc5690815d4d.webp">
-<meta property="article:published_time" content="2020-08-02T03:57:33.000Z">
-<meta property="article:modified_time" content="2020-08-02T04:14:43.989Z">
+<meta property="article:published_time" content="2021-02-26T03:53:19.000Z">
+<meta property="article:modified_time" content="2021-02-26T04:05:19.976Z">
 <meta property="article:author" content="老许">
-<meta property="article:tag" content="ElasticSearch6.5.4">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://laoxshare.com/images/es/6563032-d5eefc5690815d4d.webp">
 
 
 
@@ -122,13 +119,13 @@
 
 
 
-  <link rel="canonical" href="https://laoxshare.com/2020/08/02/ElasticSearch（一）/"/>
+  <link rel="canonical" href="https://laoxshare.com/2021/02/26/分布式环境下kafka如何解决分区堵塞，无法实现满负荷消费情况/"/>
 
 
 
 
 
-  <title>ElasticSearch（一） | 我的博客</title>
+  <title>分布式环境下kafka如何解决分区堵塞，无法实现满负荷消费情况 | 我的博客</title>
   
 
 
@@ -235,7 +232,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://laoxshare.com/2020/08/02/ElasticSearch%EF%BC%88%E4%B8%80%EF%BC%89/">
+    <link itemprop="mainEntityOfPage" href="https://laoxshare.com/2021/02/26/%E5%88%86%E5%B8%83%E5%BC%8F%E7%8E%AF%E5%A2%83%E4%B8%8Bkafka%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%E5%88%86%E5%8C%BA%E5%A0%B5%E5%A1%9E%EF%BC%8C%E6%97%A0%E6%B3%95%E5%AE%9E%E7%8E%B0%E6%BB%A1%E8%B4%9F%E8%8D%B7%E6%B6%88%E8%B4%B9%E6%83%85%E5%86%B5/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="老许">
@@ -252,7 +249,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">ElasticSearch（一）</h1>
+          <h1 class="post-title" itemprop="name headline">分布式环境下kafka如何解决分区堵塞，无法实现满负荷消费情况</h1>
         
 
         <div class="post-meta">
@@ -264,8 +261,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-08-02T11:57:33+08:00">
-                2020-08-02
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-02-26T11:53:19+08:00">
+                2021-02-26
               </time>
             
 
@@ -302,30 +299,15 @@
       
 
       
-        <h1 id="关于es"><a href="#关于es" class="headerlink" title="关于es"></a>关于es</h1><p>ES是一个基于RESTful web接口并且构建在Apache Lucene之上的开源分布式搜索引擎。</p>
-<p>同时ES还是一个分布式文档数据库，其中每个字段均可被索引，而且每个字段的数据均可被搜索，能够横向扩展至数以百计的服务器存储以及处理PB级的数据。</p>
-<p>可以在极短的时间内存储、搜索和分析大量的数据。通常作为具有复杂搜索场景情况下的核心发动机。</p>
-<p>ES就是为高可用和可扩展而生的。一方面可以通过升级硬件来完成系统扩展，称为垂直或向上扩展（Vertical Scale/Scaling Up）。</p>
-<p>另一方面，增加更多的服务器来完成系统扩展，称为水平扩展或者向外扩展（Horizontal Scale/Scaling Out）。尽管ES能够利用更强劲的硬件，但是垂直扩展毕竟还是有它的极限。真正的可扩展性来自于水平扩展，通过向集群中添加更多的节点来分担负载，增加可靠性。ES天生就是分布式的，它知道如何管理多个节点来完成扩展和实现高可用性。意味应用不需要做任何的改动。</p>
-<h1 id="Elasticsearch相关概念"><a href="#Elasticsearch相关概念" class="headerlink" title="Elasticsearch相关概念"></a>Elasticsearch相关概念</h1><ol>
-<li><p>集群（cluster）：一个集群就是由一个或多个节点组织在一起，它们共同持有你整个的数据，并一起提供索引和搜索功能。</p>
-</li>
-<li><p>节点（node）：一个节点就是集群中的一个服务器，作为集群的一部分，参与集群的索引和搜索功能。</p>
-</li>
-<li><p>索引（index）： 一个索引就是一个具有相似特征的文档集合，相当于一个数据集。</p>
-</li>
-<li><p>类型（type）：在一个索引中，你可以定义一种或多种类型，相当于对一个索引中数据的逻辑划分（ES官方文档明确说明不推荐使用type，即建议一个索引只有一个type。ES7.0已经废弃了type）。</p>
-</li>
-<li><p>文档（document）： 一个文档是一个可被索引的基础信息单元，就是索引里面的一条数据，使用JSON格式来表示。</p>
-</li>
-<li><p>域（field）： 文档中的一个数据字段。一个文档由多个域组成。</p>
-</li>
-<li><p>分片（shards）：分片是索引的一部分，一个索引由多个分片组成。每个分片可以分布在不同的节点上，ES会根据文档id（也可以指定其他字段）做hash，使用得到的hash值将文档路由到指定分片上。分片是ES做Data Rebalance的最小单元。</p>
-</li>
-<li><p>副本（replicas）：创建索引时可以为索引指定0个或者多个副本。副本是分片级别的，即索引的分片由1个主分片（primary shard）和0个或者多个副本分片（replica shard）组成。primary shard可以接受读取和写入请求，replica shard只能接受读取请求。所以副本只能提高数据的可用性和并发读取能力。当primary shard所在服务器的节点挂掉以后，ES会通过leader选举机制将replica shard为primary shard。</p>
-</li>
-</ol>
-<h2 id="Elasticsearch与传统数据库对应关系"><a href="#Elasticsearch与传统数据库对应关系" class="headerlink" title="Elasticsearch与传统数据库对应关系"></a>Elasticsearch与传统数据库对应关系</h2><p><img src="/images/es/6563032-d5eefc5690815d4d.webp" alt=""></p>
+        <h1 id="测试项目地址"><a href="#测试项目地址" class="headerlink" title="测试项目地址"></a>测试项目地址</h1><p><a href="https://github.com/ishaveanyone/springboot/tree/master/springboot-kafka-monitior" target="_blank" rel="noopener">https://github.com/ishaveanyone/springboot/tree/master/springboot-kafka-monitior</a></p>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>公司的消息队列使用的kafka框架，但是目前线上出现某几个分区频繁堵塞，而其他分区空闲的情况，导致白白浪费了服务器的性能。</p>
+<h1 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h1><p>使用kafka拦截器，我们的目标是让所有的kafka分区对应的消费线程都能满负荷去跑数据，优先队列首先就让人想到zset，使用每一次消费的间隔时间作为打分值，下一次消费的时候从redis中获取时间间隔最短的最为发送目标</p>
+<h1 id="部分代码"><a href="#部分代码" class="headerlink" title="部分代码"></a>部分代码</h1><p>消费者</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public void consumer1_1(ConsumerRecord&lt;Integer,String&gt; consumerRecord,      Acknowledgment acknowledgment) throws InterruptedException &#123;</span><br><span class="line">            acknowledgment.acknowledge();</span><br><span class="line">            Long start &#x3D; System.currentTimeMillis();</span><br><span class="line">            Integer message &#x3D; Integer.valueOf(consumerRecord.value());</span><br><span class="line">            TimeUnit.SECONDS.sleep(message);</span><br><span class="line">            redisTemplate.opsForZSet().add(quene,consumerRecord.partition(),(System.currentTimeMillis()-start));</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>生产者拦截器</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">   private static final String ZSET_LPOP_SCRIPT &#x3D; &quot;local result &#x3D; redis.call(&#39;ZRANGE&#39;, KEYS[1], 0, 0)\n&quot; + &quot;local element &#x3D; result[1]\n&quot; + &quot;if element then\n&quot; + &quot; redis.call(&#39;ZREM&#39;, KEYS[1], element)\n&quot; + &quot; return element\n&quot; + &quot;else\n&quot; + &quot; return nil\n&quot; + &quot;end&quot;;</span><br><span class="line"></span><br><span class="line">@Override</span><br><span class="line">   public ProducerRecord onSend(ProducerRecord producerRecord) &#123;</span><br><span class="line">       RedisTemplate redisTemplate &#x3D; (RedisTemplate) SpringContextUtil.getBean(&quot;redisTemplate&quot;, RedisTemplate.class);</span><br><span class="line">       Integer  p &#x3D;  (Integer) redisTemplate.execute(new DefaultRedisScript&lt;&gt;(ZSET_LPOP_SCRIPT, Integer.class), Collections.singletonList(quene));</span><br><span class="line">       if(Objects.isNull(p))&#123;</span><br><span class="line">           return producerRecord;</span><br><span class="line">       &#125;else&#123;</span><br><span class="line">           ProducerRecord newProducerRecord &#x3D; new ProducerRecord(</span><br><span class="line">                   producerRecord.topic(), p, producerRecord.timestamp(),</span><br><span class="line">                   producerRecord.key(), producerRecord.value()</span><br><span class="line">           );</span><br><span class="line">           return newProducerRecord;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<p><i>由于zset 没有pop操作，所以使用lua脚本实现</p>
+<h1 id="后言"><a href="#后言" class="headerlink" title="后言"></a>后言</h1><p>目前没有上线，不知道这样处理，瓶颈是不是会转移到redis上，目前系统的QPS 是 1万/min</p>
 
       
     </div>
@@ -341,12 +323,6 @@
 
     <footer class="post-footer">
       
-        <div class="post-tags">
-          
-            <a href="/tags/ElasticSearch6-5-4/" rel="tag"># ElasticSearch6.5.4</a>
-          
-        </div>
-      
 
       
       
@@ -356,8 +332,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/07/23/java%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/" rel="next" title="java内存模型">
-                <i class="fa fa-chevron-left"></i> java内存模型
+              <a href="/2021/01/14/%E5%85%B3%E4%BA%8Efegin-client%E7%BA%BF%E7%A8%8B%E6%B1%A0%E7%9A%84%E9%85%8D%E7%BD%AE/" rel="next" title="关于fegin-client线程池的配置">
+                <i class="fa fa-chevron-left"></i> 关于fegin-client线程池的配置
               </a>
             
           </div>
@@ -365,10 +341,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/08/02/ElasticSearch%EF%BC%88%E4%BA%8C%EF%BC%89/" rel="prev" title="ElasticSearch（二）">
-                ElasticSearch（二） <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -491,7 +463,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#关于es"><span class="nav-number">1.</span> <span class="nav-text">关于es</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Elasticsearch相关概念"><span class="nav-number">2.</span> <span class="nav-text">Elasticsearch相关概念</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Elasticsearch与传统数据库对应关系"><span class="nav-number">2.1.</span> <span class="nav-text">Elasticsearch与传统数据库对应关系</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#测试项目地址"><span class="nav-number">1.</span> <span class="nav-text">测试项目地址</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">2.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#解决方案"><span class="nav-number">3.</span> <span class="nav-text">解决方案</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#部分代码"><span class="nav-number">4.</span> <span class="nav-text">部分代码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#后言"><span class="nav-number">5.</span> <span class="nav-text">后言</span></a></li></ol></div>
             
 
           </div>
