@@ -79,15 +79,15 @@
 
 
 
-<meta name="description" content="首先通过在vm 配置好内外网，映射本地的两块网卡。具体的配置请看我的另外一篇博客https:&#x2F;&#x2F;blog.csdn.net&#x2F;aaaaa2428572&#x2F;article&#x2F;details&#x2F;79685944  接下来配置gitlab（网上的很坑，很多都没法用，就是很多的yum源都挂了，通过下载rpm进行配置的，请参看下面这位博主的博客）https:&#x2F;&#x2F;blog.csdn.net&#x2F;sugar69&#x2F;arti">
+<meta name="description" content="前言今天公司有一个需求，对一个并发特别的一个服务记录每一次请求的数据，并且通过不按顺序的字段去重，如果这样，先判断是否存在 然后存储数据，到了后面必然会导致插入数据非常慢，所以研究下 mysql 的在并发读写高的情况下的事务 和 锁控制  提交未提交首先 一直存在自己的困惑就是 未提交 的数据 ，执行了mapper的save 或者session的insert语句，表中都是刷不出来数据的，那么此时的">
 <meta property="og:type" content="article">
-<meta property="og:title" content="搭建gitlab">
-<meta property="og:url" content="https://laoxshare.com/2020/07/21/%E6%90%AD%E5%BB%BAgitlab/index.html">
+<meta property="og:title" content="mysql的事务和锁">
+<meta property="og:url" content="https://laoxshare.com/2021/05/14/mysql%E7%9A%84%E4%BA%8B%E5%8A%A1%E5%92%8C%E9%94%81/index.html">
 <meta property="og:site_name" content="我的博客">
-<meta property="og:description" content="首先通过在vm 配置好内外网，映射本地的两块网卡。具体的配置请看我的另外一篇博客https:&#x2F;&#x2F;blog.csdn.net&#x2F;aaaaa2428572&#x2F;article&#x2F;details&#x2F;79685944  接下来配置gitlab（网上的很坑，很多都没法用，就是很多的yum源都挂了，通过下载rpm进行配置的，请参看下面这位博主的博客）https:&#x2F;&#x2F;blog.csdn.net&#x2F;sugar69&#x2F;arti">
+<meta property="og:description" content="前言今天公司有一个需求，对一个并发特别的一个服务记录每一次请求的数据，并且通过不按顺序的字段去重，如果这样，先判断是否存在 然后存储数据，到了后面必然会导致插入数据非常慢，所以研究下 mysql 的在并发读写高的情况下的事务 和 锁控制  提交未提交首先 一直存在自己的困惑就是 未提交 的数据 ，执行了mapper的save 或者session的insert语句，表中都是刷不出来数据的，那么此时的">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2020-07-21T05:14:23.000Z">
-<meta property="article:modified_time" content="2020-07-21T05:15:28.700Z">
+<meta property="article:published_time" content="2021-05-14T06:35:02.781Z">
+<meta property="article:modified_time" content="2021-05-14T09:24:43.479Z">
 <meta property="article:author" content="老许">
 <meta name="twitter:card" content="summary">
 
@@ -119,13 +119,13 @@
 
 
 
-  <link rel="canonical" href="https://laoxshare.com/2020/07/21/搭建gitlab/"/>
+  <link rel="canonical" href="https://laoxshare.com/2021/05/14/mysql的事务和锁/"/>
 
 
 
 
 
-  <title>搭建gitlab | 我的博客</title>
+  <title>mysql的事务和锁 | 我的博客</title>
   
 
 
@@ -232,7 +232,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://laoxshare.com/2020/07/21/%E6%90%AD%E5%BB%BAgitlab/">
+    <link itemprop="mainEntityOfPage" href="https://laoxshare.com/2021/05/14/mysql%E7%9A%84%E4%BA%8B%E5%8A%A1%E5%92%8C%E9%94%81/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="老许">
@@ -249,7 +249,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">搭建gitlab</h1>
+          <h1 class="post-title" itemprop="name headline">mysql的事务和锁</h1>
         
 
         <div class="post-meta">
@@ -261,8 +261,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-07-21T13:14:23+08:00">
-                2020-07-21
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-05-14T14:35:02+08:00">
+                2021-05-14
               </time>
             
 
@@ -299,16 +299,25 @@
       
 
       
-        <ul>
-<li><p>首先通过在vm 配置好内外网，映射本地的两块网卡。具体的配置请看我的另外一篇博客<br><a href="https://blog.csdn.net/aaaaa2428572/article/details/79685944" target="_blank" rel="noopener">https://blog.csdn.net/aaaaa2428572/article/details/79685944</a></p>
-</li>
-<li><p>接下来配置gitlab（网上的很坑，很多都没法用，就是很多的yum源都挂了，通过下载rpm进行配置的，请参看下面这位博主的博客）<br><a href="https://blog.csdn.net/sugar69/article/details/81977792" target="_blank" rel="noopener">https://blog.csdn.net/sugar69/article/details/81977792</a></p>
-</li>
-<li><p>最后搭建完成还得配置端口和ip但是这个也莫名其妙参照之后，还是端口映射会出错，最后直接找到对应的地址<br><a href="http://192.168.10.134:8088/users/password/edit?reset_password_token=op_iJZ_MbT8TMLpvFYXy" target="_blank" rel="noopener">http://192.168.10.134:8088/users/password/edit?reset_password_token=op_iJZ_MbT8TMLpvFYXy</a><br>访问成功(好不容易)</p>
-</li>
-<li><p>最后使用最新的版本11.2-1的版本好像没出现上面的任何问题</p>
-</li>
-</ul>
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>今天公司有一个需求，对一个并发特别的一个服务记录每一次请求的数据，并且通过不按顺序的字段去重，如果这样，先判断是否存在 然后存储数据，到了后面必然会导致插入数据非常慢，所以研究下 mysql 的在并发读写高的情况下的事务 和 锁控制 </p>
+<h2 id="提交未提交"><a href="#提交未提交" class="headerlink" title="提交未提交"></a>提交未提交</h2><p>首先 一直存在自己的困惑就是 未提交 的数据 ，执行了mapper的save 或者session的insert语句，表中都是刷不出来数据的，那么此时的数据是存放在哪里呢<br>未提交的数据 mysql 通过redo日志记录数据，通过Buffer pool 提高mysql 的读写性能，Buffer pool 刷盘是随机io 比较耗时，redo是顺序io 非常快。undo日志用于记录用于记录记录记录修改的前后情况，用于进行回滚</p>
+<p>也就是 mysql 的操作 是数据操作基本上是基于 buffer pool 。每一次的操作会先进行redo 记录（fsync  异步操作）这次的数据操作，防止意外宕机，宕机情况从redo中获取实际的操作记录 ，回复上一次的修改 并且进行回滚，然后修改buffer pool ，然后进行定期刷脏，所以非常的重要 redo记录</p>
+<h2 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h2><p>事务中的一致性问题<br>并发事务执行中 会出现一些事务执行前后一致性的问题 </p>
+<pre><code>读未提交 ： 不同事务 可以读取未提交的数据
+
+读已提交 :  事务之间只能读取被提交的数据
+
+幻读    :  事务的开始过程中  和结束所看到的 修改的数据并须是一致的 ，锁表   
+
+串行化 : 事务一个一个执行 ，一个事务执行完 才能下一个 
+
+对应四个隔离级别
+    read uncommmit
+    r c
+    rep r
+    servileze</code></pre><h2 id="锁"><a href="#锁" class="headerlink" title="锁"></a>锁</h2><p>种类 ：<br>    读锁  互相读取不影响<br>    写锁<br>    共享锁<br>    排他锁 </p>
+<p>表锁 myisam<br>    读锁  select 就会开启一个读锁<br>    写锁<br>    共享锁<br>    排他锁<br>        innon 默认使用表锁 </p>
+<p>行锁 ： innon<br>    select 不开锁<br>    update delete create 默认都是自动加写锁<br>    意向共享锁 — 读读 并行，获取共享锁的行 不允许被修改   S锁   lock in share mode<br>    意向排他锁 — 读写 读读 都不能并行 写不会生效 获取会被阻塞   for update<br>    gap 锁 如果多条数据加所就是gap 锁</p>
 
       
     </div>
@@ -333,8 +342,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/06/17/java%E7%BC%96%E7%A0%81%E8%A7%84%E8%8C%83/" rel="next" title="java编码规范">
-                <i class="fa fa-chevron-left"></i> java编码规范
+              <a href="/2021/04/19/%E6%8E%92%E9%98%9F%E7%B3%BB%E7%BB%9F%E5%92%8C%E5%92%8C%E5%8F%AB%E5%8F%B7%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%AE%9E%E7%8E%B0%E6%96%B9%E6%A1%88/" rel="next" title="排队系统和和叫号系统的实现方案">
+                <i class="fa fa-chevron-left"></i> 排队系统和和叫号系统的实现方案
               </a>
             
           </div>
@@ -342,10 +351,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/07/21/%E4%BD%BF%E7%94%A8nginx%E4%BB%A5%E5%8F%8Aopenssl%E5%AE%9E%E7%8E%B0https%E8%BD%AChttp/" rel="prev" title="使用nginx以及openssl实现https转http">
-                使用nginx以及openssl实现https转http <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -397,8 +402,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -449,6 +463,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#提交未提交"><span class="nav-number">1.1.</span> <span class="nav-text">提交未提交</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#事务"><span class="nav-number">1.2.</span> <span class="nav-text">事务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#锁"><span class="nav-number">1.3.</span> <span class="nav-text">锁</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
