@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="aop," />
+  <meta name="keywords" content="kafka," />
 
 
 
@@ -79,17 +79,17 @@
 
 
 
-<meta name="description" content="前言今天使用 aop 完成日志记录的时候，before，after，afterreturing都是正常执行完成的。对异常也要进行记录，但是数据存不进去，百度了下是因为数据库的事务也是基于aop，在代码中之前开启事务，代码之后提交事务，但是因为日志的aop在事务的事务之后执行，所以需要设置日志的aop的顺序 顺序实现使用Order接口1234@Overridepublic int value() &amp;">
+<meta name="description" content="前言公司核心业务是风控处理数据，由于业务发展迅速，之前使用传统mq 进行分区排队的方式，效率比较底下，原因在于使用mq属于一个排队模块，没有办法避免队伍中存在一两笔“事多”的数据，就好比去医院排队挂号，可能前面就有几个老人在你前面，年纪大了关心身体问的比较全面，那么处理这笔就比较费时间，在等待期间，其他的队列都处理完所有数据了，而我们还在队列中等待，mq 不管是kafka 还是rocketmq都是">
 <meta property="og:type" content="article">
-<meta property="og:title" content="sringAOP异常数据库事务未提交">
-<meta property="og:url" content="https://laoxshare.com/2020/09/13/sringAOP%E5%BC%82%E5%B8%B8%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1%E6%9C%AA%E6%8F%90%E4%BA%A4/index.html">
+<meta property="og:title" content="排队系统和和叫号系统的实现方案">
+<meta property="og:url" content="https://laoxshare.com/2021/04/19/%E6%8E%92%E9%98%9F%E7%B3%BB%E7%BB%9F%E5%92%8C%E5%92%8C%E5%8F%AB%E5%8F%B7%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%AE%9E%E7%8E%B0%E6%96%B9%E6%A1%88/index.html">
 <meta property="og:site_name" content="我的博客">
-<meta property="og:description" content="前言今天使用 aop 完成日志记录的时候，before，after，afterreturing都是正常执行完成的。对异常也要进行记录，但是数据存不进去，百度了下是因为数据库的事务也是基于aop，在代码中之前开启事务，代码之后提交事务，但是因为日志的aop在事务的事务之后执行，所以需要设置日志的aop的顺序 顺序实现使用Order接口1234@Overridepublic int value() &amp;">
+<meta property="og:description" content="前言公司核心业务是风控处理数据，由于业务发展迅速，之前使用传统mq 进行分区排队的方式，效率比较底下，原因在于使用mq属于一个排队模块，没有办法避免队伍中存在一两笔“事多”的数据，就好比去医院排队挂号，可能前面就有几个老人在你前面，年纪大了关心身体问的比较全面，那么处理这笔就比较费时间，在等待期间，其他的队列都处理完所有数据了，而我们还在队列中等待，mq 不管是kafka 还是rocketmq都是">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2020-09-13T15:18:05.000Z">
-<meta property="article:modified_time" content="2020-09-13T15:32:12.962Z">
+<meta property="article:published_time" content="2021-04-19T02:23:34.000Z">
+<meta property="article:modified_time" content="2021-04-19T03:03:37.252Z">
 <meta property="article:author" content="老许">
-<meta property="article:tag" content="aop">
+<meta property="article:tag" content="kafka">
 <meta name="twitter:card" content="summary">
 
 
@@ -120,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="https://laoxshare.com/2020/09/13/sringAOP异常数据库事务未提交/"/>
+  <link rel="canonical" href="https://laoxshare.com/2021/04/19/排队系统和和叫号系统的实现方案/"/>
 
 
 
 
 
-  <title>sringAOP异常数据库事务未提交 | 我的博客</title>
+  <title>排队系统和和叫号系统的实现方案 | 我的博客</title>
   
 
 
@@ -233,7 +233,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://laoxshare.com/2020/09/13/sringAOP%E5%BC%82%E5%B8%B8%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1%E6%9C%AA%E6%8F%90%E4%BA%A4/">
+    <link itemprop="mainEntityOfPage" href="https://laoxshare.com/2021/04/19/%E6%8E%92%E9%98%9F%E7%B3%BB%E7%BB%9F%E5%92%8C%E5%92%8C%E5%8F%AB%E5%8F%B7%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%AE%9E%E7%8E%B0%E6%96%B9%E6%A1%88/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="老许">
@@ -250,7 +250,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">sringAOP异常数据库事务未提交</h1>
+          <h1 class="post-title" itemprop="name headline">排队系统和和叫号系统的实现方案</h1>
         
 
         <div class="post-meta">
@@ -262,8 +262,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-09-13T23:18:05+08:00">
-                2020-09-13
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-04-19T10:23:34+08:00">
+                2021-04-19
               </time>
             
 
@@ -300,14 +300,11 @@
       
 
       
-        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>今天使用 aop 完成日志记录的时候，before，after，afterreturing都是正常执行完成的。对异常也要进行记录，但是数据存不进去，百度了下是因为数据库的事务也是基于aop，在代码中之前开启事务，代码之后提交事务，但是因为日志的aop在事务的事务之后执行，所以需要设置日志的aop的顺序</p>
-<h1 id="顺序实现"><a href="#顺序实现" class="headerlink" title="顺序实现"></a>顺序实现</h1><h2 id="使用Order接口"><a href="#使用Order接口" class="headerlink" title="使用Order接口"></a>使用Order接口</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">public int value() &#123;</span><br><span class="line">    return 1;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="使用注解的方式"><a href="#使用注解的方式" class="headerlink" title="使用注解的方式"></a>使用注解的方式</h2><p>@Order(1)<br><br>数值越小，优先级越高</p>
-<h2 id="spring实现aop"><a href="#spring实现aop" class="headerlink" title="spring实现aop"></a>spring实现aop</h2><p>AOP的顺序</p>
-<pre><code>around-&gt;before-&gt;after-&gt;around
-
-    -&gt;成功 afterreturing
-    -&gt;异常 afterthrowing</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">@Aspect</span><br><span class="line">@Component</span><br><span class="line">@Order(1)</span><br><span class="line">public class LoanCallbackAspect &#123;</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * aop 执行顺序 before after returning</span><br><span class="line">     *&#x2F;</span><br><span class="line">    static Map&lt;Long,Long&gt; log_aop_containter &#x3D;new ConcurrentHashMap();</span><br><span class="line">    static Logger logger&#x3D; LoggerFactory.getLogger(LoanCallbackAspect.class);</span><br><span class="line">    static ExecutorService outputMsgUpdateTasks&#x3D;Executors.newFixedThreadPool(50);</span><br><span class="line">    @Autowired</span><br><span class="line">    private IService iLogService;</span><br><span class="line"></span><br><span class="line">    private final static String excutionstr&#x3D;&quot;execution( * com.balabala.loanserviceloansupermarket.controller.LoanCallbackController.*(..) )&quot;;</span><br><span class="line"></span><br><span class="line">    @Pointcut(excutionstr)</span><br><span class="line">    private void pointCut()&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Before(&quot;pointCut()&quot;)</span><br><span class="line">    public void doBefore(JoinPoint joinPoint)&#123;</span><br><span class="line">       </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @AfterReturning(returning&#x3D;&quot;obj&quot;, pointcut &#x3D; &quot;pointCut()&quot;)</span><br><span class="line">    public void doAfterReturnig(Object obj)&#123;</span><br><span class="line">        handleOutputMessage(obj,1);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @AfterThrowing(value &#x3D; &quot;pointCut()&quot;,throwing &#x3D; &quot;e&quot;)</span><br><span class="line">    public void afterThrowing(JoinPoint joinPoint,Exception e) &#123;</span><br><span class="line">        handleOutputMessage(e,0);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @After(value &#x3D; &quot;pointCut()&quot;)</span><br><span class="line">    public void after(JoinPoint joinPoint) &#123;</span><br><span class="line">     </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void handleOutputMessage(Object obj,int success)&#123;</span><br><span class="line">       </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public Map&lt;String,String&gt; extractRequest(HttpServletRequest request )&#123;</span><br><span class="line">      </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>公司核心业务是风控处理数据，由于业务发展迅速，之前使用传统mq 进行分区排队的方式，效率比较底下，原因在于使用mq属于一个排队模块，没有办法避免队伍中存在一两笔“事多”的数据，就好比去医院排队挂号，可能前面就有几个老人在你前面，年纪大了关心身体问的比较全面，那么处理这笔就比较费时间，在等待期间，其他的队列都处理完所有数据了，而我们还在队列中等待，mq 不管是kafka 还是rocketmq都是是队列排队的 。没有办法每时每刻调整队列数据。但是银行叫号系统不一样，某一两笔比较费事的数据，不会影响窗口的处理效率，窗口只要有空闲就能立马处理数据。</p>
+<h1 id="mq"><a href="#mq" class="headerlink" title="mq"></a>mq</h1><p>传统mq都是基于分区进行队列排队，并且在实际使用的时候，都是使用线程分区一一对应，保证有序准确消费数据，如果所有的分区被多个线程池进行消费，就不能保证ack的位置准确性，所以这样设计是有道理的</p>
+<h2 id="kafka-mq"><a href="#kafka-mq" class="headerlink" title="kafka mq"></a>kafka mq</h2><p>partion 和 consumer 一对一进行消费</p>
+<h2 id="rocketmq"><a href="#rocketmq" class="headerlink" title="rocketmq"></a>rocketmq</h2><p>queue 和 consumer 一对一进行消费</p>
+<h1 id="叫号模块"><a href="#叫号模块" class="headerlink" title="叫号模块"></a>叫号模块</h1><p>自己实现了一个叫号模块</p>
 
       
     </div>
@@ -325,7 +322,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/aop/" rel="tag"># aop</a>
+            <a href="/tags/kafka/" rel="tag"># kafka</a>
           
         </div>
       
@@ -338,8 +335,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/09/08/kafka%E5%8A%A8%E6%80%81%E8%AE%BE%E7%BD%AE%E5%B9%B6%E5%8F%91/" rel="next" title="kafka动态设置并发">
-                <i class="fa fa-chevron-left"></i> kafka动态设置并发
+              <a href="/2021/02/26/%E5%88%86%E5%B8%83%E5%BC%8F%E7%8E%AF%E5%A2%83%E4%B8%8Bkafka%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%E5%88%86%E5%8C%BA%E5%A0%B5%E5%A1%9E%EF%BC%8C%E6%97%A0%E6%B3%95%E5%AE%9E%E7%8E%B0%E6%BB%A1%E8%B4%9F%E8%8D%B7%E6%B6%88%E8%B4%B9%E6%83%85%E5%86%B5/" rel="next" title="分布式环境下kafka如何解决分区堵塞，无法实现满负荷消费情况">
+                <i class="fa fa-chevron-left"></i> 分布式环境下kafka如何解决分区堵塞，无法实现满负荷消费情况
               </a>
             
           </div>
@@ -347,10 +344,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/09/17/mysql%E6%97%A5%E6%9C%9F%E5%AD%97%E6%AE%B5datetime%E5%92%8Cjava%E4%B8%ADDate%E8%AF%AF%E5%B7%AE/" rel="prev" title="mysql日期字段datetime和java中Date误差">
-                mysql日期字段datetime和java中Date误差 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -473,7 +466,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#顺序实现"><span class="nav-number">2.</span> <span class="nav-text">顺序实现</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#使用Order接口"><span class="nav-number">2.1.</span> <span class="nav-text">使用Order接口</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用注解的方式"><span class="nav-number">2.2.</span> <span class="nav-text">使用注解的方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#spring实现aop"><span class="nav-number">2.3.</span> <span class="nav-text">spring实现aop</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#mq"><span class="nav-number">2.</span> <span class="nav-text">mq</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#kafka-mq"><span class="nav-number">2.1.</span> <span class="nav-text">kafka mq</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rocketmq"><span class="nav-number">2.2.</span> <span class="nav-text">rocketmq</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#叫号模块"><span class="nav-number">3.</span> <span class="nav-text">叫号模块</span></a></li></ol></div>
             
 
           </div>
